@@ -1,0 +1,1 @@
+export { BrowserMonitoringService } from './BrowserMonitoringService';

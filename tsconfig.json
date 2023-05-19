@@ -1,0 +1,10 @@
+{
+  "extends": "@kilojs/typescript-config/react-lib.json",
+  "compilerOptions": {
+    "baseUrl": "./src",
+    "rootDir": "./src",
+    "outDir": "dist"
+  },
+  "include": ["./src/**/*", "./typings/**/*"],
+  "exclude": ["./node_modules/**/*", "./dist/**/*", "./__tests__/**/*"]
+}
