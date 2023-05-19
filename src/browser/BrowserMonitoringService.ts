@@ -31,16 +31,16 @@ export class BrowserMonitoringService {
       remoteMonitoringServiceParams &&
       isSomeRemoteMonitoringServiceParamMissing
     ) {
-      console.log(
+      this.logger = new ConsoleLogger();
+      this.logger.warn(
         '[MonitoringService] can not initialize remote monitoring service, because some variables are missing. Initializing with console instead',
       );
-      console.log(`
+      this.logger.warn(`
         serviceName - ${serviceName}
         serviceVersion - ${serviceVersion}
         serviceEnv - ${serviceEnv}
         clientToken - ${clientToken}
       `);
-      this.logger = new ConsoleLogger();
     } else {
       this.logger = ddLogger;
     }
@@ -68,10 +68,8 @@ export class BrowserMonitoringService {
     });
   }
 
-  info(message: string, context?: object) {
-    console.log('this.logger', this.logger);
-    console.log('this.logger.info', this.logger.info);
-    this.logger.info(message, context);
+  info(...args: [message: string, context?: object]) {
+    this.logger.info(...args);
   }
 
   reportError(error: Error, context?: object) {
