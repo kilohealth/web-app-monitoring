@@ -14,17 +14,19 @@ describe('BrowserMonitoringService', () => {
   describe('constructor', () => {
     let consoleInfoSpy: jest.SpyInstance;
     beforeEach(() => {
-      consoleInfoSpy = jest.spyOn(console, 'info');
+      consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation();
     });
 
     it('should initialize with console if no params provided', () => {
+      const context = { key: 'value' };
       const browserMonitoringService = new BrowserMonitoringService();
 
-      browserMonitoringService.info('test');
-      expect(consoleInfoSpy).toHaveBeenCalledWith('test');
+      browserMonitoringService.info('test', context);
+      expect(consoleInfoSpy).toHaveBeenCalledWith('test', context);
     });
 
     it('should initialize with console if not enough params for remote logging provided', () => {
+      const context = { key: 'value' };
       const browserMonitoringService = new BrowserMonitoringService({
         serviceName: 'serviceName',
         serviceEnv: 'serviceEnv',
@@ -32,11 +34,12 @@ describe('BrowserMonitoringService', () => {
         clientToken: '',
       });
 
-      browserMonitoringService.info('test');
-      expect(consoleInfoSpy).toHaveBeenCalledWith('test');
+      browserMonitoringService.info('test', context);
+      expect(consoleInfoSpy).toHaveBeenCalledWith('test', context);
     });
 
     it('should initialize with datadog logs if params provided', () => {
+      const context = { key: 'value' };
       const browserMonitoringService = new BrowserMonitoringService({
         serviceName: 'serviceName',
         serviceEnv: 'serviceEnv',
@@ -44,11 +47,11 @@ describe('BrowserMonitoringService', () => {
         clientToken: 'clientToken',
       });
 
-      browserMonitoringService.info('test');
-      expect(datadogLogs.logger.info).toHaveBeenCalledWith('test', undefined);
+      browserMonitoringService.info('test', context);
+      expect(datadogLogs.logger.info).toHaveBeenCalledWith('test', context);
     });
 
-    beforeEach(() => {
+    afterEach(() => {
       consoleInfoSpy.mockRestore();
     });
   });

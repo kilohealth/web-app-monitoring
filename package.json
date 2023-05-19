@@ -7,7 +7,7 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "prepare": "husky install",
-    "test": "jest --config='jest.config.js' --detectOpenHandles"
+    "test": "jest"
   },
   "lint-staged": {
     "package.json": [
