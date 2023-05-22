@@ -1,17 +1,3 @@
 {
-  "root": true,
-  "extends": ["@kilohealth/eslint-config/node"],
-  "plugins": ["import"],
-  "parser": "@typescript-eslint/parser",
-  "rules": {
-  },
-  "parserOptions": {
-    "ecmaVersion": 6,
-    "sourceType": "module",
-    "ecmaFeatures": {
-      "jsx": true,
-      "legacyDecorators": true,
-      "experimentalObjectRestSpread": true
-    }
-  }
+  "extends": ["@kilohealth/eslint-config-node"]
 }
