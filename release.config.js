@@ -26,7 +26,11 @@ function semanticReleaseConfig(params) {
       '@semantic-release/commit-analyzer',
       '@semantic-release/release-notes-generator',
       '@semantic-release/changelog',
-      '@semantic-release/gitlab',
+      // TODO: remove from semantic release package, since we
+      // can publish not only from gitlab
+      // '@semantic-release/gitlab',
+      // TODO: remove from this function, add ability to pass plugins
+      '@semantic-release/github',
       [
         '@semantic-release/npm',
         {
@@ -56,7 +60,9 @@ function semanticReleaseConfig(params) {
 module.exports = {
   ...semanticReleaseConfig({
     defaultBranch: 'main',
-    plugins: { '@semantic-release/npm': { npmPublish: true } },
+    plugins: {
+      '@semantic-release/npm': { npmPublish: true },
+    },
   }),
   repositoryUrl: 'https://github.com/kilohealth/web-app-monitoring',
 };
