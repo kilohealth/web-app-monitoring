@@ -13,7 +13,6 @@ jobs:
         uses: actions/checkout@v3
         with:
           token: ${{ secrets.GH_TOKEN }}
-          fetch-depth: 0
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -26,7 +25,17 @@ jobs:
           timeout_minutes: 10
           retry_wait_seconds: 60
           max_attempts: 2
-          command: npm install --ci
+          command: |
+            if [[ ! -f .npmrc ]]; then
+            {
+              echo "@frontend:registry=${ CI_API_V4_URL }/packages/npm/"
+              echo "@kilojs:registry=${ CI_API_V4_URL }/packages/npm/"
+              echo "@${ CI_PROJECT_ROOT_NAMESPACE }:registry=${ CI_API_V4_URL }/projects/${ CI_PROJECT_ID }/packages/npm/"
+              echo "${ CI_API_V4_URL#https? }/packages/npm/:_authToken=\${ CI_JOB_TOKEN }"
+              echo "${ CI_API_V4_URL#https? }/projects/${ CI_PROJECT_ID }/packages/npm/:_authToken=\${ CI_JOB_TOKEN }"
+            } >> .npmrc
+            fi
+            npm install --ci
       - name: Setup NPM
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

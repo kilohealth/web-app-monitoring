@@ -12,7 +12,7 @@ const defaultParams = {
 
 // TODO: remove after outsourcing @kilojs/semantic-release-config
 // this is copy paste from there
-export function semanticReleaseConfig(params) {
+function semanticReleaseConfig(params) {
   return {
     branches: [
       '+([0-9])?(.{+([0-9]),x}).x',
