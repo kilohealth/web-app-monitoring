@@ -23,6 +23,14 @@ export class BrowserMonitoringService {
       remoteMonitoringServiceParams ?? {};
 
     if (serviceName && serviceVersion && serviceEnv && clientToken) {
+      datadogLogs.init({
+        clientToken,
+        service: serviceName,
+        version: serviceVersion,
+        env: serviceEnv,
+        forwardConsoleLogs: 'all',
+      });
+
       this.logger = ddLogger;
     } else {
       this.logger = new ConsoleLogger();
@@ -41,28 +49,20 @@ export class BrowserMonitoringService {
     }
   }
 
-  setupReportingNativeLogs() {
-    if (!this.remoteMonitoringServiceParams) {
-      this.reportError(
-        new Error('Can not setup remote monitoring without all needed params'),
-      );
-
-      return;
-    }
-
-    datadogLogs.init({
-      clientToken: this.remoteMonitoringServiceParams.clientToken,
-      service: this.remoteMonitoringServiceParams.serviceName,
-      version: this.remoteMonitoringServiceParams.serviceVersion,
-      env: this.remoteMonitoringServiceParams.serviceEnv,
-      // TODO: think about below
-      forwardErrorsToLogs: true,
-      sessionSampleRate: 100,
-    });
+  debug(...args: [message: string, context?: object]) {
+    this.logger.debug(...args);
   }
 
   info(...args: [message: string, context?: object]) {
     this.logger.info(...args);
+  }
+
+  warn(...args: [message: string, context?: object]) {
+    this.logger.warn(...args);
+  }
+
+  error(...args: [message: string, context?: object, error?: Error]) {
+    this.logger.error(...args);
   }
 
   reportError(error: Error, context?: object) {
