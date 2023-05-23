@@ -7,6 +7,7 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "prepare": "husky install",
+    "semantic-release": "semantic-release",
     "test": "jest"
   },
   "lint-staged": {
@@ -53,5 +54,9 @@
     "sort-package-json": "^2.4.1",
     "ts-jest": "^29.1.0",
     "typescript": "^5.0.4"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }

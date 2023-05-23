@@ -2,8 +2,12 @@ name: Release
 on:
   push:
     branches:
+      - '+([0-9])?(.{+([0-9]),x}).x'
       - main
-      - feat/browser-monitoring-service
+      - next
+      - next-major
+      - beta
+      - alpha
 jobs:
   release:
     name: Release
@@ -51,4 +55,4 @@ jobs:
           HUSKY: 0
         run: |
           npm run build
-          npm publish --access public
+          npm run semantic-release
