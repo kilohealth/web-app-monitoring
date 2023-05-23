@@ -33,6 +33,7 @@ jobs:
           git config user.email "kilo-github-ci@users.noreply.github.com"
       - name: Release
         env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
           HUSKY: 0
         run: |
           npm run build
