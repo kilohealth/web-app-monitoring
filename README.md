@@ -43,6 +43,5 @@ browserMonitoringService.info('Smth happened');
 
 ## Methods
 
-- `info`: adds item to logs (either local or remote, depending on setup);
+- `debug, info, warn, error`: adds item to logs (either local or remote, depending on setup);
 - `reportError`: reports error to monitoring system (either local or remote, depending on setup);
-- `setupReportingNativeLogs`: intersects native logs and report them into remote system (in case needed params for remote system provided);
