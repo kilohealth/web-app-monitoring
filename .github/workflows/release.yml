@@ -3,8 +3,7 @@ on:
   push:
     branches:
       - main
-      - feat/browser-monitoring-service2--setup-ci
-      - next
+      - feat/browser-monitoring-service
 jobs:
   release:
     name: Release
@@ -52,4 +51,4 @@ jobs:
           HUSKY: 0
         run: |
           npm run build
-          npx semantic-release
+          npm publish --access public
