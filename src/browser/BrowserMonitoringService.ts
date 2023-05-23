@@ -14,11 +14,8 @@ interface RemoteMonitoringServiceParams {
 
 export class BrowserMonitoringService {
   private logger: Logger;
-  private remoteMonitoringServiceParams?: RemoteMonitoringServiceParams;
 
   constructor(remoteMonitoringServiceParams?: RemoteMonitoringServiceParams) {
-    this.remoteMonitoringServiceParams = remoteMonitoringServiceParams;
-
     const { serviceName, serviceVersion, serviceEnv, clientToken } =
       remoteMonitoringServiceParams ?? {};
 
