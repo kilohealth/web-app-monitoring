@@ -21,6 +21,7 @@ function semanticReleaseConfig(params) {
       'next-major',
       { name: 'beta', prerelease: true },
       { name: 'alpha', prerelease: true },
+      'feat/browser-monitoring-service',
     ],
     plugins: [
       '@semantic-release/commit-analyzer',
