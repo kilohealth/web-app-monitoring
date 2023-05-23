@@ -4,6 +4,7 @@ on:
     branches:
       - main
       - feat/browser-monitoring-service2--setup-ci
+      - next
 jobs:
   release:
     name: Release
