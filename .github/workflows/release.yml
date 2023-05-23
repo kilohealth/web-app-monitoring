@@ -1,0 +1,55 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+      - feat/browser-monitoring-service2--setup-ci
+      - next
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+      - name: install package dependencies
+        env:
+          HUSKY: 0
+        uses: nick-fields/retry@v2
+        with:
+          timeout_minutes: 10
+          retry_wait_seconds: 60
+          max_attempts: 2
+          command: |
+            if [[ ! -f .npmrc ]]; then
+            {
+              echo "@frontend:registry=${ CI_API_V4_URL }/packages/npm/"
+              echo "@kilojs:registry=${ CI_API_V4_URL }/packages/npm/"
+              echo "@${ CI_PROJECT_ROOT_NAMESPACE }:registry=${ CI_API_V4_URL }/projects/${ CI_PROJECT_ID }/packages/npm/"
+              echo "${ CI_API_V4_URL#https? }/packages/npm/:_authToken=\${ CI_JOB_TOKEN }"
+              echo "${ CI_API_V4_URL#https? }/projects/${ CI_PROJECT_ID }/packages/npm/:_authToken=\${ CI_JOB_TOKEN }"
+            } >> .npmrc
+            fi
+            npm install --ci
+      - name: Setup NPM
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+      - name: Setup GitHub
+        run: |
+          git config user.name "kilo-github-ci"
+          git config user.email "kilo-github-ci@users.noreply.github.com"
+      - name: Release
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          HUSKY: 0
+        run: |
+          npm run build
+          npx semantic-release

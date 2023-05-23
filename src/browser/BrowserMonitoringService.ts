@@ -14,38 +14,31 @@ interface RemoteMonitoringServiceParams {
 
 export class BrowserMonitoringService {
   private logger: Logger;
-  private remoteMonitoringServiceParams:
-    | RemoteMonitoringServiceParams
-    | undefined;
+  private remoteMonitoringServiceParams?: RemoteMonitoringServiceParams;
 
   constructor(remoteMonitoringServiceParams?: RemoteMonitoringServiceParams) {
+    this.remoteMonitoringServiceParams = remoteMonitoringServiceParams;
+
     const { serviceName, serviceVersion, serviceEnv, clientToken } =
       remoteMonitoringServiceParams ?? {};
 
-    const isSomeRemoteMonitoringServiceParamMissing =
-      !serviceName || !serviceVersion || !serviceEnv || !clientToken;
+    if (serviceName && serviceVersion && serviceEnv && clientToken) {
+      this.logger = ddLogger;
+    } else {
+      this.logger = new ConsoleLogger();
 
-    if (!remoteMonitoringServiceParams) {
-      this.logger = new ConsoleLogger();
-    } else if (
-      remoteMonitoringServiceParams &&
-      isSomeRemoteMonitoringServiceParamMissing
-    ) {
-      this.logger = new ConsoleLogger();
-      this.logger.warn(
-        '[MonitoringService] can not initialize remote monitoring service, because some variables are missing. Initializing with console instead',
-      );
-      this.logger.warn(`
+      if (remoteMonitoringServiceParams) {
+        this.logger.warn(
+          '[MonitoringService] can not initialize remote monitoring service, because some variables are missing. Initializing with console instead',
+        );
+        this.logger.warn(`
         serviceName - ${serviceName}
         serviceVersion - ${serviceVersion}
         serviceEnv - ${serviceEnv}
         clientToken - ${clientToken}
       `);
-    } else {
-      this.logger = ddLogger;
+      }
     }
-
-    this.remoteMonitoringServiceParams = remoteMonitoringServiceParams;
   }
 
   setupReportingNativeLogs() {
