@@ -1,3 +1,10 @@
+# [1.0.0-alpha.3](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2023-05-24)
+
+
+### Features
+
+* add server monitoring system, extract common interface ([045e61d](https://github.com/kilohealth/web-app-monitoring/commit/045e61dbfecdee58729f488a9712e4f06e42549f))
+
 # [1.0.0-alpha.2](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2023-05-23)
 
 
