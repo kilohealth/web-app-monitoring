@@ -1,3 +1,10 @@
+# [1.0.0-alpha.4](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2023-05-24)
+
+
+### Features
+
+* **cli:** add cli script to upload sourcemaps (not tested) ([ab29a30](https://github.com/kilohealth/web-app-monitoring/commit/ab29a300d547afa5410e1412c7129986b94d0106))
+
 # [1.0.0-alpha.3](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2023-05-24)
 
 
