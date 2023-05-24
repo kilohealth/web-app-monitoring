@@ -5,10 +5,12 @@
   "author": "Kilo Health",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "build": "rimraf dist && tsc && npm run build:cli",
+    "build:cli": "cp -r ./src/cli ./dist/cli ",
     "prepare": "husky install",
     "semantic-release": "semantic-release",
-    "test": "jest"
+    "test": "jest",
+    "upload:sourcemaps": "./dist/cli/sourcemap-uploader.sh"
   },
   "lint-staged": {
     "package.json": [
@@ -28,6 +30,7 @@
   },
   "dependencies": {
     "@datadog/browser-logs": "^4.42.2",
+    "@datadog/datadog-ci": "^2.11.0",
     "dd-trace": "^4.0.0",
     "pino": "^8.14.1"
   },
