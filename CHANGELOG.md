@@ -1,3 +1,10 @@
+# [1.0.0-alpha.6](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2023-05-29)
+
+
+### Features
+
+* **cli:** expose initTracing ([8ff21dd](https://github.com/kilohealth/web-app-monitoring/commit/8ff21ddd93d634aa2f9ff8af790f58069474fa3e))
+
 # [1.0.0-alpha.5](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2023-05-29)
 
 
