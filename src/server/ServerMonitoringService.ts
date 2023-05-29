@@ -1,14 +1,15 @@
+import 'pino-datadog-transport';
 import pino from 'pino';
 
 import { MonitoringService } from '../shared/MonitoringService';
-import { Logger } from '../shared/Logger';
+import { ConsoleLogger } from '../shared/ConsoleLogger';
 
 import { getLoggingFunction } from './getLoggingFunction';
 
 interface UnknownLogger {
-  log(...parts: unknown[]): void;
+  log?(...parts: unknown[]): void;
 
-  debug(...parts: unknown[]): void;
+  debug?(...parts: unknown[]): void;
 
   info(...parts: unknown[]): void;
 
@@ -40,19 +41,18 @@ export class ServerMonitoringService extends MonitoringService {
       },
     });
 
-    const logger = pino({
-      level: 'info',
-      exitOnError: false,
+    const logger = pino(
+      {
+        level: 'info',
+        exitOnError: false,
+      },
       transport,
-    });
-
-    this.overrideNativeConsole(logger);
-    this.catchNativeProcessErrors(logger);
+    );
 
     return logger;
   }
 
-  overrideLogger(existingLogger: UnknownLogger, newLogger: Logger) {
+  overrideLogger(unknownLogger: UnknownLogger) {
     /**
      * Monkey-patch global console.log logger. Yes. Sigh.
      * @type {string[]}
@@ -66,30 +66,41 @@ export class ServerMonitoringService extends MonitoringService {
     ] as const;
 
     for (const property of loggingProperties) {
-      if (property === 'log') {
-        existingLogger.log = getLoggingFunction('info', newLogger);
-      } else if (Object.keys(existingLogger).includes(property)) {
-        existingLogger[property] = getLoggingFunction(property, newLogger);
+      if (Object.hasOwn(unknownLogger, property)) {
+        unknownLogger[property] = getLoggingFunction(property, this.logger);
+      } else if (typeof unknownLogger[property] === 'function') {
+        unknownLogger[property] = getLoggingFunction('info', this.logger);
       }
     }
   }
 
-  // we need this method to override external console, for example next console
-  // Monkey-patch Next.js logger.
-  // See https://github.com/atkinchris/next-logger/blob/main/index.js
-  // See https://github.com/vercel/next.js/blob/canary/packages/next/build/output/log.ts
-  private overrideNativeConsole(logger: Logger) {
-    this.overrideLogger(console, logger);
+  overrideNativeConsole() {
+    if (this.logger instanceof ConsoleLogger) {
+      this.logger.warn(
+        "[ServerMonitoringService] can't override native console, because was initialized with it",
+      );
+
+      return;
+    }
+
+    this.overrideLogger(console);
   }
 
-  private catchNativeProcessErrors(logger: Logger) {
-    // Add general error logging.
+  catchProcessErrors() {
+    if (this.logger instanceof ConsoleLogger) {
+      this.logger.warn(
+        "[ServerMonitoringService] can't override native process error, because was initialized with default console",
+      );
+
+      return;
+    }
+
     process.on('unhandledRejection', (error: Error) => {
-      logger.error('unhandledRejection', undefined, error);
+      this.logger.error('unhandledRejection', undefined, error);
     });
 
     process.on('uncaughtException', (error: Error) => {
-      logger.error('uncaughtException', undefined, error);
+      this.logger.error('uncaughtException', undefined, error);
     });
   }
 }
