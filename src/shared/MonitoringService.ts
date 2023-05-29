@@ -16,7 +16,7 @@ export abstract class MonitoringService {
     serviceEnv: string,
   ): Logger;
 
-  private logger: Logger;
+  logger: Logger;
   constructor(
     remoteMonitoringServiceParams?: MonitoringServiceConstructorParams,
   ) {

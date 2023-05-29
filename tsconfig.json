@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    // kilo react.json
     "esModuleInterop": true,
     "isolatedModules": true,
     "experimentalDecorators": true,
@@ -18,6 +19,13 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "removeComments": true,
+
+    // kilo react-lib.json
+    "declaration": true,
+    "declarationMap": true,
+    "noEmit": false,
+    "noEmitHelpers": true,
+    "importHelpers": true,
 
     "allowJs": true, // TODO: type getLoggingFunction properly
     "baseUrl": "./src",
