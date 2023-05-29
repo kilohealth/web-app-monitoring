@@ -1,3 +1,15 @@
+# [1.0.0-alpha.7](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2023-05-29)
+
+
+### Bug Fixes
+
+* **iso:** update console logger to avoid logging extra undefined ([89db1e7](https://github.com/kilohealth/web-app-monitoring/commit/89db1e7ebe44c83b1e8de0c3259313fb5bddb4c4))
+
+
+### BREAKING CHANGES
+
+* **iso:** removed root index file
+
 # [1.0.0-alpha.6](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2023-05-29)
 
 
