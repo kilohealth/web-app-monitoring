@@ -1,19 +1,23 @@
 import { Logger } from './Logger';
 
 export class ConsoleLogger implements Logger {
-  debug(message: string, context?: object) {
-    console.debug(message, context);
+  debug(...args: [message: string, context?: object]) {
+    // eslint-disable-next-line no-console
+    console.debug(...args);
   }
 
-  info(message: string, context?: object) {
-    console.info(message, context);
+  info(...args: [message: string, context?: object]) {
+    // eslint-disable-next-line no-console
+    console.info(...args);
   }
 
-  warn(message: string, context?: object) {
-    console.warn(message, context);
+  warn(...args: [message: string, context?: object]) {
+    // eslint-disable-next-line no-console
+    console.warn(...args);
   }
 
-  error(message: string, context?: object, error?: Error) {
-    console.error(message, context, error);
+  error(...args: [message: string, context?: object, error?: Error]) {
+    // eslint-disable-next-line no-console
+    console.error(...args);
   }
 }
