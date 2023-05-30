@@ -64,6 +64,6 @@ export abstract class MonitoringService {
   }
 
   reportError(error: Error, context?: object) {
-    this.logger.error(error.name, context, error);
+    this.logger.error(error.message, context, error);
   }
 }

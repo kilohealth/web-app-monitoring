@@ -103,3 +103,9 @@ In order to upload sourcemaps to remote monitoring service you can use cli from 
 
 - `MONITORING_TOOL__BUILD_DIR` - relative path to bulid folder, where sourcemaps are located
 - `MONITORING_TOOL__PUBLIC_PATH` - relative public path to js files, when code is served in production
+
+## Roadmap
+
+- write guide on using instrumentation hook for nextjs server integration
+- write guide on env variables renaming
+- add guide on next integration (TS, global variables, phase in next.config.js)
