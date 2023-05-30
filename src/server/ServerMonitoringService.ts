@@ -9,6 +9,7 @@ import {
 import { ConsoleLogger } from '../shared/ConsoleLogger';
 
 import { getLoggingFunction } from './getLoggingFunction';
+import { PinoWrapper } from './PinoWrapper';
 
 interface UnknownLogger {
   log?(...parts: unknown[]): void;
@@ -66,9 +67,9 @@ export class ServerMonitoringService extends MonitoringService {
       defaultLoggerOptions,
       overriddenLoggerOptions,
     );
-    const logger = pino(finalLoggerOptions, transport);
+    const pinoLogger = pino(finalLoggerOptions, transport);
 
-    return logger;
+    return new PinoWrapper(pinoLogger);
   }
 
   overrideLogger(unknownLogger: UnknownLogger) {

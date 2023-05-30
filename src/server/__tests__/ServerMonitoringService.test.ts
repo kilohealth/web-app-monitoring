@@ -49,8 +49,8 @@ describe('ServerMonitoringService', () => {
     it('initialize with console if no params provided', () => {
       const serverMonitoringService = new ServerMonitoringService();
 
-      serverMonitoringService.info('test', context);
-      expect(consoleInfoSpy).toHaveBeenCalledWith('test', context);
+      serverMonitoringService.info('test');
+      expect(consoleInfoSpy).toHaveBeenCalledWith('test');
     });
 
     it('initializes with console if not enough params for remote logging provided', () => {
@@ -60,8 +60,8 @@ describe('ServerMonitoringService', () => {
         authToken: '',
       });
 
-      serverMonitoringService.info('test', context);
-      expect(consoleInfoSpy).toHaveBeenCalledWith('test', context);
+      serverMonitoringService.info('test');
+      expect(consoleInfoSpy).toHaveBeenCalledWith('test');
       consoleWarnSpy.mockRestore();
     });
 
@@ -70,8 +70,8 @@ describe('ServerMonitoringService', () => {
         remoteMonitoringServiceParams,
       );
 
-      serverMonitoringService.info('test', context);
-      expect(pinoLogger.info).toHaveBeenCalledWith('test', context);
+      serverMonitoringService.info('test');
+      expect(pinoLogger.info).toHaveBeenCalledWith('test');
     });
 
     it('creates datadog transport', () => {
@@ -110,7 +110,10 @@ describe('ServerMonitoringService', () => {
 
     serverMonitoringService.reportError(error, context);
 
-    expect(pinoLogger.error).toHaveBeenCalledWith(message, context, error);
+    expect(pinoLogger.error).toHaveBeenCalledWith(
+      { ...context, err: error },
+      message,
+    );
   });
 
   it('provides base log methods and transfer them to external service', () => {
@@ -118,12 +121,12 @@ describe('ServerMonitoringService', () => {
       remoteMonitoringServiceParams,
     );
 
-    serverMonitoringService.info(message, context);
-    expect(pinoLogger.info).toHaveBeenCalledWith(message, context);
-    serverMonitoringService.debug(message, context);
-    expect(pinoLogger.debug).toHaveBeenCalledWith(message, context);
-    serverMonitoringService.warn(message, context);
-    expect(pinoLogger.warn).toHaveBeenCalledWith(message, context);
+    serverMonitoringService.info(message);
+    expect(pinoLogger.info).toHaveBeenCalledWith(message);
+    serverMonitoringService.debug(message);
+    expect(pinoLogger.debug).toHaveBeenCalledWith(message);
+    serverMonitoringService.warn(message);
+    expect(pinoLogger.warn).toHaveBeenCalledWith(message);
   });
 
   it('can override external logger', function () {
@@ -156,15 +159,11 @@ describe('ServerMonitoringService', () => {
     externalLogger.debug('debugMessage', context);
     expect(debugMock).not.toHaveBeenCalled();
     // TODO: find good format for this
-    expect(pinoLogger.debug).toHaveBeenCalledWith(
-      {
-        data: { parts: ['debugMessage', context] },
-        error: undefined,
-        type: 'debug',
-      },
-      'debugMessage',
-      context,
-    );
+    expect(pinoLogger.debug).toHaveBeenCalledWith('debugMessage', {
+      data: { parts: ['debugMessage', context] },
+      error: undefined,
+      type: 'debug',
+    });
   });
 
   it('can override native console', function () {
@@ -179,15 +178,11 @@ describe('ServerMonitoringService', () => {
     // eslint-disable-next-line no-console
     console.debug('debugMessage', context);
     expect(debugConsoleSpy).not.toHaveBeenCalled();
-    expect(pinoLogger.debug).toHaveBeenCalledWith(
-      {
-        data: { parts: ['debugMessage', context] },
-        error: undefined,
-        type: 'debug',
-      },
-      'debugMessage',
-      context,
-    );
+    expect(pinoLogger.debug).toHaveBeenCalledWith('debugMessage', {
+      data: { parts: ['debugMessage', context] },
+      error: undefined,
+      type: 'debug',
+    });
 
     debugConsoleSpy.mockRestore();
   });
@@ -208,11 +203,7 @@ describe('ServerMonitoringService', () => {
       );
       const errorHandler = processOnSpy.mock.calls[callNumber][1];
       errorHandler(error);
-      expect(pinoLogger.error).toHaveBeenCalledWith(
-        errorType,
-        undefined,
-        error,
-      );
+      expect(pinoLogger.error).toHaveBeenCalledWith({ err: error }, errorType);
     }
 
     testProcessError('unhandledRejection', 0);
@@ -247,5 +238,15 @@ describe('ServerMonitoringService', () => {
     expect(consoleWarnSpy).toHaveBeenCalled();
 
     processOnSpy.mockRestore();
+  });
+
+  it('swaps context and messages places for pino logger', function () {
+    const serverMonitoringService = new ServerMonitoringService(
+      remoteMonitoringServiceParams,
+    );
+
+    serverMonitoringService.info(message, context);
+
+    expect(pinoLogger.info).toHaveBeenCalledWith(context, message);
   });
 });
