@@ -1,3 +1,10 @@
+# [1.0.0-alpha.9](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2023-05-30)
+
+
+### Features
+
+* **browser,server:** add possibility to provide internal config, add tests ([c528365](https://github.com/kilohealth/web-app-monitoring/commit/c528365ec5ced8df515c06314544fb777b50f986))
+
 # [1.0.0-alpha.8](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2023-05-30)
 
 
