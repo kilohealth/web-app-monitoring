@@ -1,3 +1,10 @@
+# [1.0.0-alpha.10](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2023-05-30)
+
+
+### Features
+
+* **server:** add PinoWrapper to pass context when logging ([1044f94](https://github.com/kilohealth/web-app-monitoring/commit/1044f9477dd313f4cdb81011cac5f9a3ce7f33e5))
+
 # [1.0.0-alpha.9](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.8...v1.0.0-alpha.9) (2023-05-30)
 
 
