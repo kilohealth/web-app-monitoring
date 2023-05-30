@@ -77,9 +77,10 @@ describe(`integration: ${initServerMonitoring}`, () => {
     const errorHandler = processOnSpy.mock.calls[0][1];
     errorHandler(error);
     expect(pinoLogger.error).toHaveBeenCalledWith(
+      {
+        err: error,
+      },
       'unhandledRejection',
-      undefined,
-      error,
     );
 
     processOnSpy.mockRestore();
