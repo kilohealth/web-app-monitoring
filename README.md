@@ -56,7 +56,7 @@ serverMonitoringService.info('Smth happened');
 import { initServerMonitoring } from '@frontend/web-app-monitoring';
 
 const remoteMonitoringServiceParams = {
-  serviceName: `${process.env.MONITORING_TOOL__SERVICE_NAME}__next-server`,
+  serviceName: process.env.MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: process.env.MONITORING_TOOL__SERVICE_VERSION,
   serviceEnv: process.env.MONITORING_TOOL__SERVICE_ENV,
   authToken: process.env.MONITORING_TOOL__API_KEY,
@@ -81,7 +81,7 @@ initServerMonitoring(remoteMonitoringServiceParams, {
 import { initTracing } from '@frontend/web-app-monitoring';
 
 const remoteMonitoringServiceParams = {
-  serviceName: `${process.env.MONITORING_TOOL__SERVICE_NAME}__next-server`,
+  serviceName: process.env.MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: process.env.MONITORING_TOOL__SERVICE_VERSION,
   serviceEnv: process.env.MONITORING_TOOL__SERVICE_ENV,
   authToken: process.env.MONITORING_TOOL__API_KEY,

@@ -1,7 +1,7 @@
 import { Logger } from './Logger';
 import { ConsoleLogger } from './ConsoleLogger';
 
-export interface MonitoringServiceConstructorParams {
+export interface RemoteMonitoringServiceParams {
   serviceName: string;
   serviceVersion: string;
   serviceEnv: string;
@@ -10,26 +10,22 @@ export interface MonitoringServiceConstructorParams {
 
 export abstract class MonitoringService {
   abstract initRemoteLogger(
-    authToken: string,
-    serviceName: string,
-    serviceVersion: string,
-    serviceEnv: string,
+    remoteMonitoringServiceParams: RemoteMonitoringServiceParams,
+    remoteMonitoringServiceConfig?: unknown,
   ): Logger;
 
   logger: Logger;
-  constructor(
-    remoteMonitoringServiceParams?: MonitoringServiceConstructorParams,
-  ) {
+  constructor(remoteMonitoringServiceParams?: RemoteMonitoringServiceParams) {
     const { serviceName, serviceVersion, serviceEnv, authToken } =
       remoteMonitoringServiceParams ?? {};
 
     if (serviceName && serviceVersion && serviceEnv && authToken) {
-      this.logger = this.initRemoteLogger(
+      this.logger = this.initRemoteLogger({
         authToken,
         serviceName,
         serviceVersion,
         serviceEnv,
-      );
+      });
     } else {
       this.logger = new ConsoleLogger();
 

@@ -1,22 +1,28 @@
-import { MonitoringServiceConstructorParams } from '../shared/MonitoringService';
+import { RemoteMonitoringServiceParams } from '../shared/MonitoringService';
 
 import { ServerMonitoringService } from './ServerMonitoringService';
 
+const defaultMonitoringOptions = {
+  shouldOverrideNativeConsole: false,
+  shouldCatchProcessErrors: false,
+  globalMonitoringInstanceName: '',
+};
+
 interface MonitoringOptions {
-  shouldOverrideNativeConsole: boolean;
-  shouldCatchProcessErrors: boolean;
-  globalMonitoringInstanceName: string;
+  shouldOverrideNativeConsole?: boolean;
+  shouldCatchProcessErrors?: boolean;
+  globalMonitoringInstanceName?: string;
 }
 
 export const initServerMonitoring = (
-  remoteMonitoringServiceParams: MonitoringServiceConstructorParams,
-  monitoringOptions: MonitoringOptions,
+  remoteMonitoringServiceParams?: RemoteMonitoringServiceParams,
+  monitoringOptions?: MonitoringOptions,
 ): ServerMonitoringService => {
   const {
-    shouldOverrideNativeConsole,
-    shouldCatchProcessErrors,
-    globalMonitoringInstanceName,
-  } = monitoringOptions;
+    shouldOverrideNativeConsole = defaultMonitoringOptions.shouldOverrideNativeConsole,
+    shouldCatchProcessErrors = defaultMonitoringOptions.shouldCatchProcessErrors,
+    globalMonitoringInstanceName = defaultMonitoringOptions.globalMonitoringInstanceName,
+  } = monitoringOptions ?? defaultMonitoringOptions;
   const serverMonitoring = new ServerMonitoringService(
     remoteMonitoringServiceParams,
   );

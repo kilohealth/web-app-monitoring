@@ -83,8 +83,8 @@ describe('BrowserMonitoringService', () => {
 
   it('calls logger error function when reportError called', () => {
     const context = { key: 'value' };
-    const errorName = 'errorName';
-    const error = new Error(errorName);
+    const errorMessage = 'errorMessage';
+    const error = new Error(errorMessage);
     const browserMonitoringService = new BrowserMonitoringService({
       serviceName: 'serviceName',
       serviceEnv: 'serviceEnv',
@@ -95,7 +95,7 @@ describe('BrowserMonitoringService', () => {
     browserMonitoringService.reportError(error, context);
 
     expect(datadogLogs.logger.error).toHaveBeenCalledWith(
-      errorName,
+      errorMessage,
       context,
       error,
     );
