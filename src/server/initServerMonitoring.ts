@@ -11,7 +11,7 @@ interface MonitoringOptions {
 export const initServerMonitoring = (
   remoteMonitoringServiceParams: MonitoringServiceConstructorParams,
   monitoringOptions: MonitoringOptions,
-) => {
+): ServerMonitoringService => {
   const {
     shouldOverrideNativeConsole,
     shouldCatchProcessErrors,
