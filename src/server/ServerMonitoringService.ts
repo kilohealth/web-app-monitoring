@@ -1,7 +1,11 @@
 import 'pino-datadog-transport';
-import pino from 'pino';
+import deepMerge from 'lodash/merge';
+import pino, { LoggerOptions, TransportBaseOptions } from 'pino';
 
-import { MonitoringService } from '../shared/MonitoringService';
+import {
+  MonitoringService,
+  RemoteMonitoringServiceParams,
+} from '../shared/MonitoringService';
 import { ConsoleLogger } from '../shared/ConsoleLogger';
 
 import { getLoggingFunction } from './getLoggingFunction';
@@ -20,12 +24,20 @@ interface UnknownLogger {
 
 export class ServerMonitoringService extends MonitoringService {
   initRemoteLogger(
-    authToken: string,
-    serviceName: string,
-    serviceVersion: string,
-    serviceEnv: string,
+    remoteMonitoringServiceParams: RemoteMonitoringServiceParams,
+    remoteMonitoringServiceConfig: {
+      transportOptions?: TransportBaseOptions;
+      loggerOptions?: LoggerOptions;
+    } = {},
   ) {
-    const transport = pino.transport({
+    const { serviceName, serviceVersion, serviceEnv, authToken } =
+      remoteMonitoringServiceParams ?? {};
+    const {
+      transportOptions: overriddenTransportOptions,
+      loggerOptions: overriddenLoggerOptions,
+    } = remoteMonitoringServiceConfig;
+
+    const defaultTransportOptions = {
       target: 'pino-datadog-transport',
       options: {
         service: serviceName,
@@ -39,15 +51,22 @@ export class ServerMonitoringService extends MonitoringService {
           },
         },
       },
-    });
-
-    const logger = pino(
-      {
-        level: 'info',
-        exitOnError: false,
-      },
-      transport,
+    };
+    const finalTransportOptions = deepMerge(
+      defaultTransportOptions,
+      overriddenTransportOptions,
     );
+    const transport = pino.transport(finalTransportOptions);
+
+    const defaultLoggerOptions = {
+      level: 'info',
+      exitOnError: false,
+    };
+    const finalLoggerOptions = deepMerge(
+      defaultLoggerOptions,
+      overriddenLoggerOptions,
+    );
+    const logger = pino(finalLoggerOptions, transport);
 
     return logger;
   }
@@ -58,9 +77,9 @@ export class ServerMonitoringService extends MonitoringService {
      * @type {string[]}
      */
     const loggingProperties = [
-      'log',
       'debug',
       'info',
+      'log',
       'warn',
       'error',
     ] as const;
@@ -68,8 +87,6 @@ export class ServerMonitoringService extends MonitoringService {
     for (const property of loggingProperties) {
       if (Object.hasOwn(unknownLogger, property)) {
         unknownLogger[property] = getLoggingFunction(property, this.logger);
-      } else if (typeof unknownLogger[property] === 'function') {
-        unknownLogger[property] = getLoggingFunction('info', this.logger);
       }
     }
   }
