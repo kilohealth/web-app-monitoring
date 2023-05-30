@@ -1,3 +1,15 @@
+# [1.0.0-alpha.8](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2023-05-30)
+
+
+### Bug Fixes
+
+* **server:** remove initTracing from server import to avoid node modules import from tracing ([5b8839e](https://github.com/kilohealth/web-app-monitoring/commit/5b8839e5e5b04d59df457813d582480b0858588a))
+
+
+### BREAKING CHANGES
+
+* **server:** remove initTracing from server import
+
 # [1.0.0-alpha.7](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2023-05-29)
 
 
