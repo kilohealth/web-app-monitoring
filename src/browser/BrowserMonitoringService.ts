@@ -16,7 +16,7 @@ export class BrowserMonitoringService extends MonitoringService {
     const { serviceName, serviceVersion, serviceEnv, authToken } =
       remoteMonitoringServiceParams ?? {};
     datadogLogs.init({
-      clientToken: authToken,
+      clientToken: authToken ?? '',
       service: serviceName,
       version: serviceVersion,
       env: serviceEnv,
