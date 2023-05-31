@@ -1,3 +1,10 @@
+# [1.0.0-alpha.11](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2023-05-31)
+
+
+### Features
+
+* **server,client:** make all RemoteMonitoringServiceParams optional ([6242317](https://github.com/kilohealth/web-app-monitoring/commit/62423178b9df8f99b8705187d1004db116033201))
+
 # [1.0.0-alpha.10](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.9...v1.0.0-alpha.10) (2023-05-30)
 
 
