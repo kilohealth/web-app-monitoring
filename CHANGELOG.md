@@ -1,3 +1,10 @@
+# [1.0.0-alpha.12](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2023-06-02)
+
+
+### Bug Fixes
+
+* **client,serve:** pass additional config to loger via constructor ([2394a1d](https://github.com/kilohealth/web-app-monitoring/commit/2394a1dd9b048929d66b734d6bea640f650833a0))
+
 # [1.0.0-alpha.11](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.10...v1.0.0-alpha.11) (2023-05-31)
 
 
