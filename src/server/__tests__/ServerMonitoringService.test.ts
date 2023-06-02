@@ -77,6 +77,16 @@ describe('ServerMonitoringService', () => {
     it('creates datadog transport', () => {
       const monitoring = new ServerMonitoringService(
         remoteMonitoringServiceParams,
+        {
+          transportOptions: {
+            options: {
+              debug: true,
+            },
+          },
+          loggerOptions: {
+            safe: true,
+          },
+        },
       );
 
       expect(monitoring).toBeTruthy();
@@ -85,6 +95,7 @@ describe('ServerMonitoringService', () => {
         options: {
           service: serviceName,
           ddtags: `env:${serviceEnv},version:${serviceVersion}`,
+          debug: true,
           ddClientConf: {
             authMethods: {
               apiKeyAuth: authToken,
@@ -97,6 +108,7 @@ describe('ServerMonitoringService', () => {
         {
           level: 'info',
           exitOnError: false,
+          safe: true,
         },
         pinoTransportMock,
       );

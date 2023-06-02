@@ -15,17 +15,23 @@ export abstract class MonitoringService {
   ): Logger;
 
   logger: Logger;
-  constructor(remoteMonitoringServiceParams?: RemoteMonitoringServiceParams) {
+  constructor(
+    remoteMonitoringServiceParams?: RemoteMonitoringServiceParams,
+    remoteMonitoringServiceConfig?: unknown,
+  ) {
     const { serviceName, serviceVersion, serviceEnv, authToken } =
       remoteMonitoringServiceParams ?? {};
 
     if (serviceName && serviceVersion && serviceEnv && authToken) {
-      this.logger = this.initRemoteLogger({
-        authToken,
-        serviceName,
-        serviceVersion,
-        serviceEnv,
-      });
+      this.logger = this.initRemoteLogger(
+        {
+          authToken,
+          serviceName,
+          serviceVersion,
+          serviceEnv,
+        },
+        remoteMonitoringServiceConfig,
+      );
     } else {
       this.logger = new ConsoleLogger();
 

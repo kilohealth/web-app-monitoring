@@ -63,12 +63,17 @@ describe('BrowserMonitoringService', () => {
     });
 
     it('calls datadog init during creation', () => {
-      const monitoring = new BrowserMonitoringService({
-        serviceName: 'serviceName',
-        serviceEnv: 'serviceEnv',
-        serviceVersion: 'serviceVersion',
-        authToken: 'authToken',
-      });
+      const monitoring = new BrowserMonitoringService(
+        {
+          serviceName: 'serviceName',
+          serviceEnv: 'serviceEnv',
+          serviceVersion: 'serviceVersion',
+          authToken: 'authToken',
+        },
+        {
+          silentMultipleInit: true,
+        },
+      );
 
       expect(monitoring).toBeTruthy();
       expect(datadogLogs.init).toHaveBeenCalledWith({
@@ -77,6 +82,7 @@ describe('BrowserMonitoringService', () => {
         version: 'serviceVersion',
         env: 'serviceEnv',
         forwardConsoleLogs: 'all',
+        silentMultipleInit: true,
       });
     });
   });
