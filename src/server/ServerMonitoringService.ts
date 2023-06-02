@@ -23,13 +23,22 @@ interface UnknownLogger {
   error(...parts: unknown[]): void;
 }
 
+interface RemoteMonitoringServiceConfig {
+  transportOptions?: Partial<TransportBaseOptions>;
+  loggerOptions?: Partial<LoggerOptions>;
+}
+
 export class ServerMonitoringService extends MonitoringService {
+  constructor(
+    remoteMonitoringServiceParams?: RemoteMonitoringServiceParams,
+    remoteMonitoringServiceConfig?: RemoteMonitoringServiceConfig,
+  ) {
+    super(remoteMonitoringServiceParams, remoteMonitoringServiceConfig);
+  }
+
   initRemoteLogger(
     remoteMonitoringServiceParams: RemoteMonitoringServiceParams,
-    remoteMonitoringServiceConfig: {
-      transportOptions?: TransportBaseOptions;
-      loggerOptions?: LoggerOptions;
-    } = {},
+    remoteMonitoringServiceConfig: RemoteMonitoringServiceConfig = {},
   ) {
     const { serviceName, serviceVersion, serviceEnv, authToken } =
       remoteMonitoringServiceParams ?? {};
