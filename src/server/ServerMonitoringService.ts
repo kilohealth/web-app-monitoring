@@ -1,5 +1,5 @@
 import 'pino-datadog-transport';
-import deepMerge from 'lodash/merge';
+import deepMerge from 'deepmerge';
 import pino, { LoggerOptions, TransportBaseOptions } from 'pino';
 
 import {
@@ -64,7 +64,7 @@ export class ServerMonitoringService extends MonitoringService {
     };
     const finalTransportOptions = deepMerge(
       defaultTransportOptions,
-      overriddenTransportOptions,
+      overriddenTransportOptions ?? {},
     );
     const transport = pino.transport(finalTransportOptions);
 
@@ -74,7 +74,7 @@ export class ServerMonitoringService extends MonitoringService {
     };
     const finalLoggerOptions = deepMerge(
       defaultLoggerOptions,
-      overriddenLoggerOptions,
+      overriddenLoggerOptions ?? {},
     );
     const pinoLogger = pino(finalLoggerOptions, transport);
 
