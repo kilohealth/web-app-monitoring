@@ -32,7 +32,7 @@ const remoteMonitoringServiceParams = {
 const message = 'message';
 const error = new Error(message);
 
-describe(`integration: ${initServerMonitoring}`, () => {
+describe(`integration: ${initServerMonitoring.name}`, () => {
   it('creates console monitoring if no flags provided', function () {
     const consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation();
 
