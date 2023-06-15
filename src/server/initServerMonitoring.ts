@@ -1,6 +1,9 @@
 import { RemoteMonitoringServiceParams } from '../shared/MonitoringService';
 
-import { ServerMonitoringService } from './ServerMonitoringService';
+import {
+  RemoteMonitoringServiceConfig,
+  ServerMonitoringService,
+} from './ServerMonitoringService';
 
 const defaultMonitoringOptions = {
   shouldOverrideNativeConsole: false,
@@ -17,6 +20,7 @@ interface MonitoringOptions {
 export const initServerMonitoring = (
   remoteMonitoringServiceParams?: RemoteMonitoringServiceParams,
   monitoringOptions?: MonitoringOptions,
+  remoteMonitoringServiceConfig?: RemoteMonitoringServiceConfig,
 ): ServerMonitoringService => {
   const {
     shouldOverrideNativeConsole = defaultMonitoringOptions.shouldOverrideNativeConsole,
@@ -25,6 +29,7 @@ export const initServerMonitoring = (
   } = monitoringOptions ?? defaultMonitoringOptions;
   const serverMonitoring = new ServerMonitoringService(
     remoteMonitoringServiceParams,
+    remoteMonitoringServiceConfig,
   );
 
   if (shouldOverrideNativeConsole) {

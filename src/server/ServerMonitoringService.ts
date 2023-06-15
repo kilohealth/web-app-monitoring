@@ -23,7 +23,7 @@ interface UnknownLogger {
   error(...parts: unknown[]): void;
 }
 
-interface RemoteMonitoringServiceConfig {
+export interface RemoteMonitoringServiceConfig {
   transportOptions?: Partial<TransportBaseOptions>;
   loggerOptions?: Partial<LoggerOptions>;
 }
