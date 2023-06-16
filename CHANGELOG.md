@@ -1,3 +1,15 @@
+# [1.0.0-alpha.13](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2023-06-16)
+
+
+### Features
+
+* add single entry point for all but tracing, ([17f9014](https://github.com/kilohealth/web-app-monitoring/commit/17f9014f7fdd332a3d6f2a02a0f51f8958d044f4))
+
+
+### BREAKING CHANGES
+
+* add exports, so dist folder won't work anymore when importing
+
 # [1.0.0-alpha.12](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.11...v1.0.0-alpha.12) (2023-06-02)
 
 
