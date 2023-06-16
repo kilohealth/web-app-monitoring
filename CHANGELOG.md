@@ -1,3 +1,15 @@
+# [1.0.0-alpha.14](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2023-06-16)
+
+
+### Features
+
+* replace client with browser export ([9386842](https://github.com/kilohealth/web-app-monitoring/commit/93868425c442a47fddbcffc12f36bb48a014cbfa))
+
+
+### BREAKING CHANGES
+
+* client import won't work, replace with browser
+
 # [1.0.0-alpha.13](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.12...v1.0.0-alpha.13) (2023-06-16)
 
 
