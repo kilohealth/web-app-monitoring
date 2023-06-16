@@ -34,14 +34,14 @@
         "default": "./dist/server/index.js"
       }
     },
-    "./client": {
+    "./browser": {
       "import": {
-        "types": "./dist/client/index.d.ts",
-        "default": "./dist/client/index.js"
+        "types": "./dist/browser/index.d.ts",
+        "default": "./dist/browser/index.js"
       },
       "require": {
-        "types": "./dist/client/index.d.ts",
-        "default": "./dist/client/index.js"
+        "types": "./dist/browser/index.d.ts",
+        "default": "./dist/browser/index.js"
       }
     }
   },
