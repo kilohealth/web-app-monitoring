@@ -325,7 +325,7 @@ module.exports = phase => {
       shouldCatchProcessErrors: true,
       globalMonitoringInstanceName: 'kiloServerMonitoring',
     }
-    const monitoring = initServerMonitoring(remoteMonitoringServiceParams, config);
+    initServerMonitoring(remoteMonitoringServiceParams, config);
   }
 }
 ```
