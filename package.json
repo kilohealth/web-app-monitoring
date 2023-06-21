@@ -65,6 +65,9 @@
       }
     }
   },
+  "main": "./dist/server/index.js",
+  "browser": "./dist/browser/index.js",
+  "types": "./dist/server/index.d.ts",
   "bin": {
     "web-app-monitoring__upload-sourcemaps": "dist/cli/sourcemap-uploader.sh"
   },
