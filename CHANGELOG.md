@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0...v1.1.0) (2023-06-21)
+
+
+### Features
+
+* update to alpha2 ([1d4fb46](https://github.com/kilohealth/web-app-monitoring/commit/1d4fb461a62b7c39485e942cb9b8884fbf10acdd))
+
 # 1.0.0 (2023-06-21)
 
 
