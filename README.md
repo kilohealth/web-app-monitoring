@@ -21,7 +21,7 @@ The package consists of 3 parts:
 npm install @kilohealth/web-app-monitoring
 ```
 
-> If you migrating from direct datadog integration - don’t forget to remove @datadog/browser-logs and @datadog/datadog-ci. Those are now deps of @kilohealth/web-app-monitoring.
+> If you are migrating from direct datadog integration - don’t forget to remove @datadog/browser-logs and @datadog/datadog-ci. Those are now deps of @kilohealth/web-app-monitoring.
 
 ```
 npm uninstall @datadog/browser-logs @datadog/datadog-ci
@@ -203,8 +203,10 @@ We need to do next things:
 > Important note: there is no single entry point for package. You can't do smth like `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring';`
 > Reason for that is to avoid bundling server-code into client bundle and vice versa. This structure will ensure effective tree shaking during build time.
 
+> In case your bundler supports package.json `exports` field - you can also omit `dist` in path folder `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/browser';`
+
 ```
-import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/browser';
+import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/dist/browser';
 
 export const monitoring = new BrowserMonitoringService({
   authToken: NEXT_PUBLIC_MONITORING_TOOL__CLIENT_TOKEN,
@@ -313,7 +315,7 @@ Example(for NextJS):
   `next.config.ts:`
 
 ```
-const { initServerMonitoring } = require('@kilohealth/web-app-monitoring/server');
+const { initServerMonitoring } = require('@kilohealth/web-app-monitoring/dist/server');
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_SERVER) {
@@ -341,7 +343,7 @@ module.exports = phase => {
   `custom.d.ts:`
 
 ```
-import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/server';
+import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/dist/server';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -365,7 +367,7 @@ in the early stages of your server app -
 you can avoid sharing logger via global scope and instead initialize it inside of app.
 
 ```
-import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/server';
+import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/dist/server';
 
 export const monitoring = new ServerMonitoringService({
   authToken: MONITORING_TOOL__API_KEY,
@@ -389,7 +391,7 @@ We need to connect tracing as soon as possible during code, so it can be injecte
 Tracing module is available via:
 
 ```
-const { initTracing } = require('@kilohealth/web-app-monitoring/initTracing');
+const { initTracing } = require('@kilohealth/web-app-monitoring/dist/initTracing');
 initTracing({
   serviceName: process.env.MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: process.env.MONITORING_TOOL__SERVICE_VERSION,
@@ -402,7 +404,7 @@ Example(NextJS):
 
 ```
 const { PHASE_PRODUCTION_SERVER } = require('next/constants');
-const { initTracing } = require('@kilohealth/web-app-monitoring/initTracing');
+const { initTracing } = require('@kilohealth/web-app-monitoring/dist/initTracing');
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_SERVER) {
