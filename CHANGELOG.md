@@ -1,3 +1,41 @@
+# 1.0.0 (2023-06-21)
+
+
+### Bug Fixes
+
+* **browser:** fix TS ([70a785b](https://github.com/kilohealth/web-app-monitoring/commit/70a785bd67816d7a37e62ca498745a16f64f49a6))
+* **client,serve:** pass additional config to loger via constructor ([2cd760a](https://github.com/kilohealth/web-app-monitoring/commit/2cd760a4af6911b1042b103f293180d9599d4b7f))
+* **iso:** update console logger to avoid logging extra undefined ([2853f2b](https://github.com/kilohealth/web-app-monitoring/commit/2853f2b9cc8949f97120bec7aa1f6a766f14dfdf))
+* **server:** remove initTracing from server import to avoid node modules import from tracing ([3d94832](https://github.com/kilohealth/web-app-monitoring/commit/3d94832c4de0bf2a6e196785e47cf0694bf0520b))
+
+
+### Features
+
+* add server monitoring system, extract common interface ([5148f5d](https://github.com/kilohealth/web-app-monitoring/commit/5148f5dfd1cdedefad01bdce1398eb023d11d1de))
+* add single entry point for all but tracing, ([5dbd9fe](https://github.com/kilohealth/web-app-monitoring/commit/5dbd9feccf2ef01cd0f3726a288032bbd8527d87))
+* browser monitoring service and basic setup ([59fa779](https://github.com/kilohealth/web-app-monitoring/commit/59fa779d4af07f5cb803a250ae734c45a778c338))
+* **browser,server:** add possibility to provide internal config, add tests ([88ac056](https://github.com/kilohealth/web-app-monitoring/commit/88ac0569f92d38b0005f8daab7ff18faf3554631))
+* **browser:** move DD init to constructor,update DD config, add debug, warn and error methods ([6d658ed](https://github.com/kilohealth/web-app-monitoring/commit/6d658ed9811bb4b1c7fc0e418bc49814df1ef2a0))
+* **cli:** add cli script to upload sourcemaps (not tested) ([4c50a05](https://github.com/kilohealth/web-app-monitoring/commit/4c50a055ac49bd33801ca67fde0d4286c635da08))
+* **cli:** add initServerMonitoring and initTracing ([13b4fe8](https://github.com/kilohealth/web-app-monitoring/commit/13b4fe8232afd4614dbafc2a6eec0103584f8ec0))
+* **cli:** expose initTracing ([4c98216](https://github.com/kilohealth/web-app-monitoring/commit/4c98216f0a7b0916b47a3bded27901672c55a911))
+* expose browser and main fields ([7875d82](https://github.com/kilohealth/web-app-monitoring/commit/7875d82cbc14177b019e170d88240095b8ad3b88))
+* remove extra fields from package.json, update README.md ([0864fb2](https://github.com/kilohealth/web-app-monitoring/commit/0864fb285281b97f6c3214ee36b4cdde4e31c438))
+* remove single entry point to avoid overbundling ([09e5f2a](https://github.com/kilohealth/web-app-monitoring/commit/09e5f2ab2989b2135e30c23f782eab5f280a4fcf))
+* replace client with browser export ([81fb4de](https://github.com/kilohealth/web-app-monitoring/commit/81fb4dee9b47237e90e9db48e556381ffdc725ba))
+* **server,client:** make all RemoteMonitoringServiceParams optional ([4cdbe49](https://github.com/kilohealth/web-app-monitoring/commit/4cdbe4980d51004889469e82bfb928761738d8d8))
+* **server:** add PinoWrapper to pass context when logging ([9966043](https://github.com/kilohealth/web-app-monitoring/commit/9966043ea3ebc7c95c93499f5050db5e853d0284))
+
+
+### BREAKING CHANGES
+
+* root import won't work anymore
+* root import won't work, only import of specific modules
+* client import won't work, replace with browser
+* add exports, so dist folder won't work anymore when importing
+* **server:** remove initTracing from server import
+* **iso:** removed root index file
+
 # [1.0.0-alpha.16](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2023-06-21)
 
 
