@@ -44,6 +44,8 @@
   "scripts": {
     "build": "rimraf dist && tsc && npm run build:cli",
     "build:cli": "cp -r ./src/cli ./dist/cli",
+    "githooks:commit-msg": "commitlint --edit",
+    "githooks:pre-commit": "lint-staged",
     "prepare": "husky install",
     "semantic-release": "semantic-release",
     "test": "jest",
