@@ -1,3 +1,10 @@
+# [1.0.0-alpha.16](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.15...v1.0.0-alpha.16) (2023-06-21)
+
+
+### Features
+
+* expose browser and main fields ([6c3d2e1](https://github.com/kilohealth/web-app-monitoring/commit/6c3d2e1bb5bfa18fa7be12916c30cac9c7f2e7ed))
+
 # [1.0.0-alpha.15](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2023-06-21)
 
 
