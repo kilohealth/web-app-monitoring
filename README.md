@@ -1,4 +1,4 @@
-# @frontend/web-app-monitoring
+# @kilohealth/web-app-monitoring
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE.md)
 
@@ -200,8 +200,11 @@ We need to do next things:
 
 ### Usage: Import and instantiate BrowserMonitoringService
 
+> Important note: there is no single entry point for package. You can't do smth like `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring';`
+> Reason for that is to avoid bundling server-code into client bundle and vice versa. This structure will ensure effective tree shaking during build time.
+
 ```
-import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/dist/browser';
+import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/browser';
 
 export const monitoring = new BrowserMonitoringService({
   authToken: NEXT_PUBLIC_MONITORING_TOOL__CLIENT_TOKEN,
@@ -310,7 +313,7 @@ Example(for NextJS):
   `next.config.ts:`
 
 ```
-const { initServerMonitoring } = require('@kilohealth/web-app-monitoring/dist/server');
+const { initServerMonitoring } = require('@kilohealth/web-app-monitoring/server');
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_SERVER) {
@@ -320,7 +323,7 @@ module.exports = phase => {
       serviceEnv: process.env.MONITORING_TOOL__SERVICE_ENV,
       authToken: process.env.MONITORING_TOOL__API_KEY,
     };
-    config = {
+    const config = {
       shouldOverrideNativeConsole: true,
       shouldCatchProcessErrors: true,
       globalMonitoringInstanceName: 'kiloServerMonitoring',
@@ -338,7 +341,7 @@ module.exports = phase => {
   `custom.d.ts:`
 
 ```
-import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/dist/server';
+import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/server';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -362,7 +365,7 @@ in the early stages of your server app -
 you can avoid sharing logger via global scope and instead initialize it inside of app.
 
 ```
-import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/dist/server';
+import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/server';
 
 export const monitoring = new ServerMonitoringService({
   authToken: MONITORING_TOOL__API_KEY,
@@ -386,7 +389,7 @@ We need to connect tracing as soon as possible during code, so it can be injecte
 Tracing module is available via:
 
 ```
-const { initTracing } = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
+const { initTracing } = require('@kilohealth/web-app-monitoring/initTracing');
 initTracing({
   serviceName: process.env.MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: process.env.MONITORING_TOOL__SERVICE_VERSION,
@@ -399,7 +402,7 @@ Example(NextJS):
 
 ```
 const { PHASE_PRODUCTION_SERVER } = require('next/constants');
-const { initTracing } = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
+const { initTracing } = require('@kilohealth/web-app-monitoring/initTracing');
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_SERVER) {

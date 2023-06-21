@@ -4,16 +4,6 @@
   "license": "MIT",
   "author": "Kilo Health",
   "exports": {
-    ".": {
-      "import": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      },
-      "require": {
-        "types": "./dist/index.d.ts",
-        "default": "./dist/index.js"
-      }
-    },
     "./initTracing": {
       "import": {
         "types": "./dist/server/initTracing.d.ts",
@@ -45,8 +35,6 @@
       }
     }
   },
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "bin": {
     "web-app-monitoring__upload-sourcemaps": "dist/cli/sourcemap-uploader.sh"
   },
