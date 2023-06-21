@@ -4,6 +4,36 @@
   "license": "MIT",
   "author": "Kilo Health",
   "exports": {
+    "./dist/server/initTracing": {
+      "import": {
+        "types": "./dist/server/initTracing.d.ts",
+        "default": "./dist/server/initTracing.js"
+      },
+      "require": {
+        "types": "./dist/server/initTracing.d.ts",
+        "default": "./dist/server/initTracing.js"
+      }
+    },
+    "./dist/server": {
+      "import": {
+        "types": "./dist/server/index.d.ts",
+        "default": "./dist/server/index.js"
+      },
+      "require": {
+        "types": "./dist/server/index.d.ts",
+        "default": "./dist/server/index.js"
+      }
+    },
+    "./dist/browser": {
+      "import": {
+        "types": "./dist/browser/index.d.ts",
+        "default": "./dist/browser/index.js"
+      },
+      "require": {
+        "types": "./dist/browser/index.d.ts",
+        "default": "./dist/browser/index.js"
+      }
+    },
     "./initTracing": {
       "import": {
         "types": "./dist/server/initTracing.d.ts",
