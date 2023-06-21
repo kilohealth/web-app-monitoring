@@ -1,3 +1,15 @@
+# [1.0.0-alpha.15](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.14...v1.0.0-alpha.15) (2023-06-21)
+
+
+### Features
+
+* remove single entry point to avoid overbundling ([99c2b9e](https://github.com/kilohealth/web-app-monitoring/commit/99c2b9e8bc86296573ca8310ea946f6e2fddc0c4))
+
+
+### BREAKING CHANGES
+
+* root import won't work, only import of specific modules
+
 # [1.0.0-alpha.14](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0-alpha.13...v1.0.0-alpha.14) (2023-06-16)
 
 
