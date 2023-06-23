@@ -6,8 +6,6 @@ import {
   RemoteMonitoringServiceParams,
 } from '../shared/MonitoringService';
 
-const ddLogger = datadogLogs.logger;
-
 type RemoteMonitoringServiceConfig = Partial<LogsInitConfiguration>;
 
 export class BrowserMonitoringService extends MonitoringService {
@@ -24,6 +22,7 @@ export class BrowserMonitoringService extends MonitoringService {
   ) {
     const { serviceName, serviceVersion, serviceEnv, authToken } =
       remoteMonitoringServiceParams ?? {};
+    const ddLogger = datadogLogs.logger;
     datadogLogs.init({
       clientToken: authToken ?? '',
       service: serviceName,
