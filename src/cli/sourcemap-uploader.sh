@@ -13,4 +13,5 @@ else
             --service="$MONITORING_TOOL__SERVICE_NAME" \
             --release-version="$MONITORING_TOOL__SERVICE_VERSION" \
             --minified-path-prefix="$MONITORING_TOOL__PUBLIC_PATH"
+  exit 1
 fi
