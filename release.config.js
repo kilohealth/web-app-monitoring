@@ -17,6 +17,7 @@ function semanticReleaseConfig(params) {
     branches: [
       '+([0-9])?(.{+([0-9]),x}).x',
       params.defaultBranch ?? defaultParams.defaultBranch,
+      { name: 'alpha', prerelease: true },
     ],
     plugins: [
       '@semantic-release/commit-analyzer',
