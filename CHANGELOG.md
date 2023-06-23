@@ -1,3 +1,10 @@
+# [1.2.0-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v1.1.0...v1.2.0-alpha.1) (2023-06-23)
+
+
+### Features
+
+* attempt to remove side effect in BrowserMonitoringService.ts ([c55dc0e](https://github.com/kilohealth/web-app-monitoring/commit/c55dc0ed7b4d2e29e5be845fbb4d803f81c49ce2))
+
 # [1.1.0](https://github.com/kilohealth/web-app-monitoring/compare/v1.0.0...v1.1.0) (2023-06-21)
 
 
