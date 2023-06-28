@@ -391,7 +391,7 @@ We need to connect tracing as soon as possible during code, so it can be injecte
 Tracing module is available via:
 
 ```
-const { initTracing } = require('@kilohealth/web-app-monitoring/dist/initTracing');
+const { initTracing } = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
 initTracing({
   serviceName: process.env.MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: process.env.MONITORING_TOOL__SERVICE_VERSION,
