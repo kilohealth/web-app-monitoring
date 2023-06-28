@@ -404,7 +404,7 @@ Example(NextJS):
 
 ```
 const { PHASE_PRODUCTION_SERVER } = require('next/constants');
-const { initTracing } = require('@kilohealth/web-app-monitoring/dist/initTracing');
+const { initTracing } = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_SERVER) {
