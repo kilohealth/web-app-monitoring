@@ -1,3 +1,10 @@
+## [1.2.1-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.0...v1.2.1-alpha.1) (2023-06-30)
+
+
+### Bug Fixes
+
+* **cli:** fail when not enough env vars ([4fdb1dd](https://github.com/kilohealth/web-app-monitoring/commit/4fdb1dd25dcb5652462d06d2a21869d5ac746079))
+
 # [1.2.0](https://github.com/kilohealth/web-app-monitoring/compare/v1.1.0...v1.2.0) (2023-06-23)
 
 
