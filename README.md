@@ -1,3 +1,5 @@
+[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-no-action.svg)](https://stand-with-ukraine.pp.ua)
+
 # @kilohealth/web-app-monitoring
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE.md)
@@ -391,7 +393,7 @@ We need to connect tracing as soon as possible during code, so it can be injecte
 Tracing module is available via:
 
 ```
-const { initTracing } = require('@kilohealth/web-app-monitoring/dist/initTracing');
+const { initTracing } = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
 initTracing({
   serviceName: process.env.MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: process.env.MONITORING_TOOL__SERVICE_VERSION,
@@ -404,7 +406,7 @@ Example(NextJS):
 
 ```
 const { PHASE_PRODUCTION_SERVER } = require('next/constants');
-const { initTracing } = require('@kilohealth/web-app-monitoring/dist/initTracing');
+const { initTracing } = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_SERVER) {
