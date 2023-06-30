@@ -66,7 +66,6 @@
     }
   },
   "bin": {
-    "datadog-ci": "datadog-ci",
     "web-app-monitoring__upload-sourcemaps": "dist/cli/sourcemap-uploader.sh"
   },
   "files": [
@@ -79,8 +78,7 @@
     "githooks:pre-commit": "lint-staged",
     "prepare": "husky install",
     "semantic-release": "semantic-release",
-    "test": "jest",
-    "upload:sourcemaps": "./dist/cli/sourcemap-uploader.sh"
+    "test": "jest"
   },
   "lint-staged": {
     "package.json": [
@@ -100,7 +98,6 @@
   },
   "dependencies": {
     "@datadog/browser-logs": "^4.42.2",
-    "@datadog/datadog-ci": "^2.11.0",
     "dd-trace": "^4.0.0",
     "deepmerge": "^4.3.1",
     "pino": "^8.14.1",
