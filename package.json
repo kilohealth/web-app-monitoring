@@ -66,6 +66,7 @@
     }
   },
   "bin": {
+    "datadog-ci": "datadog-ci",
     "web-app-monitoring__upload-sourcemaps": "dist/cli/sourcemap-uploader.sh"
   },
   "files": [
