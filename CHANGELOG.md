@@ -1,3 +1,24 @@
+## [1.2.1-alpha.3](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.1-alpha.2...v1.2.1-alpha.3) (2023-06-30)
+
+
+### Bug Fixes
+
+* execute datadog-ci using npx ([659c371](https://github.com/kilohealth/web-app-monitoring/commit/659c37196941c651950775366904aebaad14b22c))
+
+## [1.2.1-alpha.2](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.1-alpha.1...v1.2.1-alpha.2) (2023-06-30)
+
+
+### Bug Fixes
+
+* redefine datadog-ci bin for pnpm support ([9e45ae3](https://github.com/kilohealth/web-app-monitoring/commit/9e45ae3f8bebaee558d54b72aba2be4b8e120efb))
+
+## [1.2.1-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.0...v1.2.1-alpha.1) (2023-06-30)
+
+
+### Bug Fixes
+
+* **cli:** fail when not enough env vars ([4fdb1dd](https://github.com/kilohealth/web-app-monitoring/commit/4fdb1dd25dcb5652462d06d2a21869d5ac746079))
+
 # [1.2.0](https://github.com/kilohealth/web-app-monitoring/compare/v1.1.0...v1.2.0) (2023-06-23)
 
 

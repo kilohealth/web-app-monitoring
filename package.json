@@ -1,6 +1,6 @@
 {
   "name": "@kilohealth/web-app-monitoring",
-  "version": "1.2.0",
+  "version": "1.2.1-alpha.3",
   "license": "MIT",
   "author": "Kilo Health",
   "exports": {
@@ -78,8 +78,7 @@
     "githooks:pre-commit": "lint-staged",
     "prepare": "husky install",
     "semantic-release": "semantic-release",
-    "test": "jest",
-    "upload:sourcemaps": "./dist/cli/sourcemap-uploader.sh"
+    "test": "jest"
   },
   "lint-staged": {
     "package.json": [
@@ -99,7 +98,6 @@
   },
   "dependencies": {
     "@datadog/browser-logs": "^4.42.2",
-    "@datadog/datadog-ci": "^2.11.0",
     "dd-trace": "^4.0.0",
     "deepmerge": "^4.3.1",
     "pino": "^8.14.1",
