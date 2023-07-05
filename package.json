@@ -3,6 +3,7 @@
   "version": "1.2.1",
   "license": "MIT",
   "author": "Kilo Health",
+  "sideEffects": false,
   "exports": {
     "./dist/server/initTracing": {
       "import": {
