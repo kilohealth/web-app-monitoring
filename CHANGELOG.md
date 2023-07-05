@@ -1,3 +1,10 @@
+## [1.2.1-alpha.4](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.1-alpha.3...v1.2.1-alpha.4) (2023-07-05)
+
+
+### Bug Fixes
+
+* **client:** add "sideEffects": false to package.json ([8be7569](https://github.com/kilohealth/web-app-monitoring/commit/8be756957d8a59e4d3fce016c85f62f2b6e87cc8))
+
 ## [1.2.1-alpha.3](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.1-alpha.2...v1.2.1-alpha.3) (2023-06-30)
 
 
