@@ -10,7 +10,7 @@ if [[ -z "${MONITORING_TOOL__API_KEY}" ]] || [[ -z "${MONITORING_TOOL__BUILD_DIR
   echo "MONITORING_TOOL__PUBLIC_PATH - $MONITORING_TOOL__PUBLIC_PATH"
   exit 1
 else
-  DATADOG_API_KEY=$MONITORING_TOOL__API_KEY npx @datadog/datadog-ci sourcemaps upload "$MONITORING_TOOL__BUILD_DIR" \
+  DATADOG_API_KEY=$MONITORING_TOOL__API_KEY npx @datadog/datadog-ci@^2.11.0 sourcemaps upload "$MONITORING_TOOL__BUILD_DIR" \
             --service="$MONITORING_TOOL__SERVICE_NAME" \
             --release-version="$MONITORING_TOOL__SERVICE_VERSION" \
             --minified-path-prefix="$MONITORING_TOOL__PUBLIC_PATH"
