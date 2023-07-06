@@ -1,3 +1,10 @@
+## [1.2.2-alpha.2](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.2-alpha.1...v1.2.2-alpha.2) (2023-07-06)
+
+
+### Bug Fixes
+
+* **cli:** fix version of @datadog/datadog-ci@^2.11.0 ([5da7b3d](https://github.com/kilohealth/web-app-monitoring/commit/5da7b3db55362947fe84446a84900681d3cf222f))
+
 ## [1.2.2-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.1...v1.2.2-alpha.1) (2023-07-05)
 
 
