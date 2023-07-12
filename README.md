@@ -11,11 +11,17 @@ to make it easy to setup monitoring for any env as well as to make it easy to mi
 
 The package consists of 3 parts:
 
-- browser monitoring
+- Browser / Client monitoring (browser logs)
 - CLI (needed to upload sourcemaps for browser monitoring)
-- server monitoring
+- Server monitoring (server logs, APM, tracing)
 
-## Browser monitoring setup:
+## Getting Started
+
+> **Note:** If you are migrating from direct datadog integration - don’t forget to remove `@datadog/...` dependencies. Those are now dependencies of `@kilohealth/web-app-monitoring`.
+>
+> ```
+> npm uninstall @datadog/...
+> ```
 
 ### Install package
 
@@ -23,191 +29,134 @@ The package consists of 3 parts:
 npm install @kilohealth/web-app-monitoring
 ```
 
-> If you are migrating from direct datadog integration - don’t forget to remove @datadog/browser-logs and @datadog/datadog-ci. Those are now deps of @kilohealth/web-app-monitoring.
+### Setup environment variables
 
-```
-npm uninstall @datadog/browser-logs @datadog/datadog-ci
-```
+| Variable                           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Upload source maps | Server (APM, tracing) | Browser / Client |
+| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------: | :-------------------: | :--------------: |
+| `MONITORING_TOOL__API_KEY`         | This key is needed in order to uploaded source maps for browser monitoring, send server side (APM) logs and tracing info. You can find API key [here](https://app.datadoghq.com/organization-settings/api-keys?id=97403b1a-0806-45e1-9ecb-fa059af82048).                                                                                                                                                                                                                                                                                                                                                                                 |         ✔️         |          ✔️           |                  |
+| `MONITORING_TOOL__SERVICE_NAME`    | The service name, for example: `timely-hand-web-funnel-app`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |         ✔️         |          ✔️           |        ✔️        |
+| `MONITORING_TOOL__SERVICE_VERSION` | The service version for example: `$CI_COMMIT_SHA`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |         ✔️         |          ✔️           |        ✔️        |
+| `MONITORING_TOOL__SERVICE_ENV`     | The service environment for example: `$CI_ENVIRONMENT_NAME`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |         ✔️         |          ✔️           |        ✔️        |
+| `MONITORING_TOOL__CLIENT_TOKEN`    | This token is needed in order to send browser monitoring logs. You can create or find client token [here](https://app.datadoghq.com/organization-settings/client-tokens).                                                                                                                                                                                                                                                                                                                                                                                                                                                                |         ️          |                       |        ✔️        |
+| `MONITORING_TOOL__PUBLIC_PATH`     | This is RELATIVE path, part of URL between domain (which can be different for different environments) and path to file itself. In other words - base path for all the assets within your application.<br/>You can think of this as kind of relative [Public Path](https://webpack.js.org/guides/public-path/). For example it can be `/` or `/static`.<br/>In other words this is common relative prefix for all your static files or / if there is none.<br/> - for Vite.js the default is `/`<br/> - for Next.js the default is `/_next/static/chunks` (!!! `_` instead of `.` in file system)<br/> - for Gatsby.js the default is `/` |         ✔️         |                       |                  |
+| `MONITORING_TOOL__BUILD_DIR`       | This should be RELATIVE path to your build directory. For example `./dist` or `./build`.</br>- for Vite.js default is `./dist`</br>- for Next.js default is `./.next/static/chunks`</br>- for Gatsby.js default is `./public`                                                                                                                                                                                                                                                                                                                                                                                                            |         ✔️         |                       |                  |
 
-### Add build phase env variables
+> **Note:** Depending on the WEB framework you are using, in order to expose environment variables to the client you may need to prefix the environment variables as mentioned below:
+>
+> - For Next.js, add the prefix `NEXT_PUBLIC_` to each variable. Refer to the [documentation](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables#bundling-environment-variables-for-the-browser) for more details.
+> - For Gatsby.js, add the prefix `GATSBY_` to each variable. Refer to the [documentation](https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables/#accessing-environment-variables-in-the-browser) for more details.
+> - For Vite.js, add the prefix `VITE_` to each variable. Refer to the [documentation](https://vitejs.dev/guide/env-and-mode.html) for more details.
 
-- `MONITORING_TOOL__API_KEY` - this key is needed in order to uploaded sourcemaps for browser monitoring. You can find API key [here](https://app.datadoghq.com/organization-settings/api-keys?id=97403b1a-0806-45e1-9ecb-fa059af82048).
-- `MONITORING_TOOL__SERVICE_NAME`, `MONITORING_TOOL__SERVICE_VERSION` and `MONITORING_TOOL__SERVICE_ENV`- the service name, version and env. These variables will be used by client code as well as by cli. Most client frameworks will not expose all node build phase env vars, so you probably need to reexpose them with prefix to switch on automatic replacement for client code during client build. In particular
-  - For NextJS - you have to add prefix `NEXT_PUBLIC_` to each of them. For example you have to add not only `MONITORING_TOOL__SERVICE_NAME=timely-hand-web-funnel-app` but also `NEXT_PUBLIC_MONITORING_TOOL__SERVICE_NAME=$MONITORING_TOOL__SERVICE_NAME`. See more in [docs](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables#exposing-environment-variables-to-the-browser).
-  - For GatsbyJS - you have to add prefix `GATSBY_`. See more in [docs](https://www.gatsbyjs.com/docs/how-to/local-development/environment-variables/#accessing-environment-variables-in-the-browser)
-  - For ViteJS - you have to add prefix `VITE_`. See more in [docs](https://vitejs.dev/guide/env-and-mode.html#env-files).
-- `MONITORING_TOOL__CLIENT_TOKEN` - this is client side token, which need to be built into client code in order to send logs into DD server.
-  Because it is needed on client you will have to re-expose it using same approach as variables above (probably prefixing env var).
-  Token you can create or find [here](https://app.datadoghq.com/organization-settings/client-tokens).
-  > PS: theoretically you can avoid creating `MONITORING_TOOL__CLIENT_TOKEN` env variable and create only `NEXT_PUBLIC_MONITORING_TOOL__CLIENT_TOKEN` instead, because this variable is not needed for CLI to work. But for the sake of SRP we advocate for sticking with same reexposing approach here.
+> **Tip:** By following Single Source of Truth principle you can reexport variables, needed for the client, in the build stage (Next.js example):
+>
+> ```
+> NEXT_PUBLIC_MONITORING_TOOL__SERVICE_NAME=$MONITORING_TOOL__SERVICE_NAME
+> NEXT_PUBLIC_MONITORING_TOOL__SERVICE_VERSION=$MONITORING_TOOL__SERVICE_VERSION
+> NEXT_PUBLIC_MONITORING_TOOL__SERVICE_ENV=$MONITORING_TOOL__SERVICE_ENV
+> ```
 
-#### Example of full env variables setup for client monitoring:
+### Setup browser monitoring
 
-##### Expose client token to be able to reexpose it for client-side code:
+#### Generate hidden source maps
 
-```
-MONITORING_TOOL__CLIENT_TOKEN=pub2_your_client_token
-```
+In order to upload source maps into the monitoring service we need to include those source map files into our build.
+This can be done by slightly altering the build phase bundler configuration of our app:
 
-##### Set variables for source map upload CLI to work during the build phase:
+<details>
+<summary>Next.js (Webpack)</summary>
 
-```
-MONITORING_TOOL__SERVICE_ENV=$CI_ENVIRONMENT_NAME
-```
-
-```
-MONITORING_TOOL__SERVICE_NAME=greantess-funnel
-```
-
-```
-MONITORING_TOOL__SERVICE_VERSION=$CI_COMMIT_SHA
-```
-
-```
-MONITORING_TOOL__API_KEY=4be_your_api_key
-```
-
-##### Reexpose for your framework to client-side code(NextJS example):
-
-```
-NEXT_PUBLIC_MONITORING_TOOL__SERVICE_ENV=$MONITORING_TOOL__SERVICE_ENV
-```
-
-```
-NEXT_PUBLIC_MONITORING_TOOL__SERVICE_NAME=$MONITORING_TOOL__SERVICE_NAME
-```
-
-```
-NEXT_PUBLIC_MONITORING_TOOL__SERVICE_VERSION=$MONITORING_TOOL__SERVICE_VERSION
-```
-
-```
-NEXT_PUBLIC_MONITORING_TOOL__CLIENT_TOKEN=$MONITORING_TOOL__CLIENT_TOKEN
-```
-
-### Modify your build code to generate sourcemaps, depending on env variable
-
-Ideally we don't want to generate and upload sourcemaps during each build.
-In order to opt-in for this behavior sometimes we need to make additional configuration changes in our build process.
-We need to build sourcemaps only in case specific env variable `IS_SOURCEMAP_UPLOAD_BUILD` is provided.
-We don't provide it for dev or debug builds, only for production.
-These are articles on how to do this for different frameworks and examples.
-
-- [Vite](https://vitejs.dev/config/build-options.html#build-sourcemap)
-
-```
-export default defineConfig({
-  ...
-  build: {
-    sourcemap: Boolean(process.env.IS_SOURCEMAP_UPLOAD_BUILD),
-    ...
-  }
-  ...
-})
-```
-
-- [NextJS](https://nextjs.org/docs/pages/api-reference/next-config-js/productionBrowserSourceMaps)
-
-```
+```js
 module.exports = {
-  ...
-  productionBrowserSourceMaps: Boolean(process.env.IS_SOURCEMAP_UPLOAD_BUILD),
-  ...
-}
+  webpack(config, context) {
+    const isClient = !context.isServer;
+    const isProd = !context.dev;
+    const isUploadSourcemapsEnabled = Boolean(
+      process.env.MONITORING_TOOL__API_KEY,
+    );
+
+    // Generate source maps only for the client side production build
+    if (isClient && isProd && isUploadSourcemapsEnabled) {
+      return {
+        ...config,
+        // No reference. No source maps exposure to the client (browser).
+        // Hidden source maps generation only for error reporting purposes.
+        devtool: 'hidden-source-map',
+      };
+    }
+
+    return config;
+  },
+};
 ```
 
-- Gatsby is a little bit more tricky. It generates sourcemaps by default. In order to prevent this you can add code to
+Refer to the [documentation](https://webpack.js.org/configuration/devtool/) for more details.
 
-```
+</details>
+
+<details>
+<summary>Gatsby.js (Webpack)</summary>
+
+```js
 module.exports.onCreateWebpackConfig = ({ stage, actions }) => {
   // build-javascript is prod build phase
   if (stage === 'build-javascript') {
     actions.setWebpackConfig({
-      // hidden-source-map removes last line from final files,
-      // to avoid contenthash mismatch between builds
-      // we don't want sourcemaps in prod by default
-      devtool: process.env.IS_SOURCEMAP_UPLOAD_BUILD
-        ? 'hidden-source-map'
-        : false,
+      // No reference. No source maps exposure to the client (browser).
+      // Hidden source maps generation only for error reporting purposes.
+      devtool: 'hidden-source-map',
     });
   }
 };
 ```
 
-There is also an [article](https://akashrajpurohit.com/blog/disable-source-maps-in-gatsbyjs-v2/) with more details.
+Refer to the [documentation](https://webpack.js.org/configuration/devtool/) for more details.
 
-### Add build and upload sourcemaps script to scripts section
+</details>
 
-#### Prepare sourcemap upload build
+<details>
+<summary>Vite.js</summary>
 
-It should run bin from our lib called `web-app-monitoring__upload-sourcemaps`.
-For this script to work you would need to provide it with two variables
-
-- `MONITORING_TOOL__PUBLIC_PATH` - this is RELATIVE path, part of URL between domain (which can be different for different environments) and path to file itself.
-  In other words - base path for all the assets within your application.
-  You can think of this as kind of relative [Public Path | webpack](https://webpack.js.org/guides/public-path/).
-  For example it can be `/` or `/static`.
-  In other words this is common relative prefix for all your static files or / if there is none.
-  - for Vite default is `/`
-  - for NextJS default is `/_next/static/chunks` (!!! `_` instead of `.` in file system)
-  - for GatsbyJS default is `/`
-- `MONITORING_TOOL__BUILD_DIR` - this should be RELATIVE path to your build directory. For example `./dist` or `./build`.
-  - for Vite default is `./dist`
-  - for NextJS default is `./.next/static/chunks`
-  - for GatsbyJS default is `./public`
-
-Example for NextJS
-
-```
-MONITORING_TOOL__BUILD_DIR=./.next/static/chunks MONITORING_TOOL__PUBLIC_PATH=/_next/static/chunks web-app-monitoring__upload-sourcemaps
+```js
+export default defineConfig({
+  build: {
+    // No reference. No source maps exposure to the client (browser).
+    // Hidden source maps generation only for error reporting purposes.
+    sourcemap: 'hidden',
+  },
+});
 ```
 
-#### 1. Approach with parallel build
+Refer to the [documentation](https://vitejs.dev/config/build-options.html#build-sourcemap) for more details.
 
-We advocate for this approach.
-With it you have separate script to build code for deployment and another one to make a build with sourcemaps to upload those to monitoring tool.
-We decided to extract source map building and uploading into separate step because:
+</details>
 
-- not each build may need these, and it will increase build time. For example, you may want to avoid this for dev builds.
-- we don’t want to manually alter the build (aka removing sourcemaps from it) because it is fragile and hard to maintain
-- we don’t want sourcemaps to leak into production, so we wanna separate generating them and uploading files into prod into different processes
+> **Note:** We are using `hidden source maps` only for error reporting purposes.
+> That means our source maps are not exposed to the client
+> and there are no references to those source maps in our source code.
 
-Example for NextJS
+#### Upload generated source maps
 
-```
-"upload:sourcemaps": "IS_SOURCEMAP_UPLOAD_BUILD=1 npm run build && MONITORING_TOOL__BUILD_DIR=./.next/static/chunks MONITORING_TOOL__PUBLIC_PATH=/_next/static/chunks web-app-monitoring__upload-sourcemaps"
-```
+In order to upload generated source maps into the monitoring service, you should use `web-app-monitoring__upload-sourcemaps` bin, provided by `@kilohealth/web-app-monitoring` package.
 
-And then your CI should run `upload:sourcemaps` script in parallel with main build,
-to avoid blocking and increasing main build time.
-
-#### 2. Approach with same build
-
-There is alternative approach to tweak main build process with sourcemaps.
-We need to do next things:
-
-- switch sourcemaps to be hidden.
-  For example instead of using option sourcemaps use hidden-sourcemaps.
-  With this we will avoid warning in console in production regarding the fact that files have a reference to sourcemaps but sourcemaps are not found.
-  We are just removing this reference during build phase.
-
-- extend usual build script with flag to include sourcemaps `IS_SOURCEMAP_UPLOAD_BUILD`,
-  script to upload them and script to remove them. For example
+Script example for Next.js:
 
 ```
-"only-upload:sourcemaps": "MONITORING_TOOL__BUILD_DIR=./public MONITORING_TOOL__PUBLIC_PATH=/ web-app-monitoring__upload-sourcemaps",
-"remove:sourcemaps": "find ./public -name \"*.map\" -type f -delete",
-"build": "IS_SOURCEMAP_UPLOAD_BUILD=1 gatsby build --prefix-paths && npm run only-upload:sourcemaps && npm run remove:sourcemaps",
+"scripts": {
+  "upload:sourcemaps": "MONITORING_TOOL__BUILD_DIR=./.next/static/chunks MONITORING_TOOL__PUBLIC_PATH=/_next/static/chunks web-app-monitoring__upload-sourcemaps",
+  ...
+},
 ```
 
-### Usage: Import and instantiate BrowserMonitoringService
+And then your CI should run `upload:sourcemaps` script for the build that includes generated source maps.
 
-> Important note: there is no single entry point for package. You can't do smth like `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring';`
+### Browser Monitoring Usage
+
+> **Important note:** There is no single entry point for package. You can't do smth like `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring';`
 > Reason for that is to avoid bundling server-code into client bundle and vice versa. This structure will ensure effective tree shaking during build time.
 
 > In case your bundler supports package.json `exports` field - you can also omit `dist` in path folder `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/browser';`
 
-```
+```ts
 import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/dist/browser';
 
 export const monitoring = new BrowserMonitoringService({
@@ -215,7 +164,7 @@ export const monitoring = new BrowserMonitoringService({
   serviceName: NEXT_PUBLIC_MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: NEXT_PUBLIC_MONITORING_TOOL__SERVICE_VERSION,
   serviceEnv: NEXT_PUBLIC_MONITORING_TOOL__SERVICE_ENV,
-})
+});
 ```
 
 As you can see we are using here all our exposed variables. If any of these is not defined - the service will fall back to console.log and warn you there about it.
@@ -225,9 +174,9 @@ Now you can just use it like
 monitoring.info('Monitoring service initialized');
 ```
 
-#### OPTIONAL: If you are using React you may benefit from utilizing [Error Boundaries](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary):
+**OPTIONAL: If you are using React you may benefit from utilizing [Error Boundaries](https://react.dev/reference/react/Component#catching-rendering-errors-with-an-error-boundary):**
 
-```
+```tsx
 import React, { Component, PropsWithChildren } from 'react';
 import { monitoring } from '../services/monitoring';
 
@@ -262,42 +211,10 @@ export class ErrorBoundary extends Component<
 }
 ```
 
-## Server monitoring setup (NextJS):
+### Setup Server Monitoring (Next.js)
 
-### Install package
-
-```
-npm install @kilohealth/web-app-monitoring
-```
-
-### Add build phase env variables
-
-- `MONITORING_TOOL__API_KEY` - this key is needed in order to send logs. You can find API key [here](https://app.datadoghq.com/organization-settings/api-keys?id=97403b1a-0806-45e1-9ecb-fa059af82048).
-- `MONITORING_TOOL__SERVICE_NAME`, `MONITORING_TOOL__SERVICE_VERSION` and `MONITORING_TOOL__SERVICE_ENV` - the service name, version and env. These variables will be used to send logs.
-
-#### Example of full env variables setup for server monitoring:
-
-##### Set variables for sending logs:
-
-```
-MONITORING_TOOL__SERVICE_ENV=$CI_ENVIRONMENT_NAME
-```
-
-```
-MONITORING_TOOL__SERVICE_NAME=greantess-funnel
-```
-
-```
-MONITORING_TOOL__SERVICE_VERSION=$CI_COMMIT_SHA
-```
-
-```
-MONITORING_TOOL__API_KEY=4be_your_api_key
-```
-
-### Usage
-
-#### Approach with facade
+<details>
+<summary>Approach with facade</summary>
 
 `initServerMonitoring` is a facade over `ServerMonitoringService`.
 You can instantiate and use that service directly.
@@ -311,13 +228,15 @@ You may wonder why we instantiate service here and not in server-side code.
 The reason for that is if we override the native console and catch native errors - we would like to set up this as soon as possible.
 If you don’t care too much about the very first seconds of next server - you can use alternative simpler server side logging solution.
 
-Example(for NextJS):
+Example for Next.js:
 
 - update next.config.ts to include into start script of production server code
   `next.config.ts:`
 
-```
-const { initServerMonitoring } = require('@kilohealth/web-app-monitoring/dist/server');
+```js
+const {
+  initServerMonitoring,
+} = require('@kilohealth/web-app-monitoring/dist/server');
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_SERVER) {
@@ -331,20 +250,20 @@ module.exports = phase => {
       shouldOverrideNativeConsole: true,
       shouldCatchProcessErrors: true,
       globalMonitoringInstanceName: 'kiloServerMonitoring',
-    }
+    };
     initServerMonitoring(remoteMonitoringServiceParams, config);
   }
-}
+};
 ```
 
 - update `custom.d.ts` file to declare that global scope now have monitoring service as a prop
   In order to use ServerMonitoringService instance in other parts of code via global we need to let TS know
   that we added new property to global object.
-  In NextJS you can just create or add next code into `custom.d.ts` file in root of the project.
+  In Next.js you can just create or add next code into `custom.d.ts` file in root of the project.
   Be aware that var name matches string that you provided in code above (kiloServerMonitoring in this case).
   `custom.d.ts:`
 
-```
+```ts
 import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/dist/server';
 
 declare global {
@@ -355,20 +274,22 @@ declare global {
 
 - use it in code
 
-```
+```ts
 export const getHomeServerSideProps = async context => {
   global.kiloServerMonitoring.info('getHomeServerSideProps called');
-  ...
 };
 ```
 
-#### Approach with direct instantiation
+</details>
+
+<details>
+<summary>Approach with direct instantiation</summary>
 
 If you don’t care too much about catching native errors or native logs
 in the early stages of your server app -
 you can avoid sharing logger via global scope and instead initialize it inside of app.
 
-```
+```ts
 import { ServerMonitoringService } from '@kilohealth/web-app-monitoring/dist/server';
 
 export const monitoring = new ServerMonitoringService({
@@ -376,7 +297,7 @@ export const monitoring = new ServerMonitoringService({
   serviceName: MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: MONITORING_TOOL__SERVICE_VERSION,
   serviceEnv: MONITORING_TOOL__SERVICE_ENV,
-})
+});
 ```
 
 As you can see we are using here all our env variables.
@@ -387,13 +308,18 @@ Now you can just use it like
 monitoring.info('Monitoring service initialized');
 ```
 
-### Tracing setup:
+</details>
+
+#### Init Tracing
 
 We need to connect tracing as soon as possible during code, so it can be injected into all base modules for APM monitoring.
 Tracing module is available via:
 
-```
-const { initTracing } = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
+```js
+const {
+  initTracing,
+} = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
+
 initTracing({
   serviceName: process.env.MONITORING_TOOL__SERVICE_NAME,
   serviceVersion: process.env.MONITORING_TOOL__SERVICE_VERSION,
@@ -402,11 +328,13 @@ initTracing({
 });
 ```
 
-Example(NextJS):
+Example for Next.js:
 
-```
+```js
 const { PHASE_PRODUCTION_SERVER } = require('next/constants');
-const { initTracing } = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
+const {
+  initTracing,
+} = require('@kilohealth/web-app-monitoring/dist/server/initTracing');
 
 module.exports = phase => {
   if (phase === PHASE_PRODUCTION_SERVER) {
@@ -417,13 +345,12 @@ module.exports = phase => {
       authToken: process.env.MONITORING_TOOL__API_KEY,
     });
   }
-}
+};
 ```
 
-> In newer versions of NextJS there is experimental feature called
+> **Note:** In newer versions of Next.js there is experimental feature called
 > [instrumentationHook](https://nextjs.org/docs/app/building-your-application/optimizing/instrumentation)
 > We can opt out from using undocumented `PHASE_PRODUCTION_SERVER` to use `instrumentationHook` for tracing init.
-
 > There is also possibility to use `NODE_OPTIONS='-r ./prestart-script.js ' next start` instead.
 > But there is an issue with `pino-datadog-transport`, which for performance reason spawns separate thread for log sending to data-dog and it this option seems to be passed to that process as well which triggers an infinite loop of require and initialization.
 
@@ -469,7 +396,7 @@ constructor(
 )
 ```
 
-```
+```ts
 interface RemoteMonitoringServiceParams {
   serviceName?: string;
   serviceVersion?: string;
@@ -495,7 +422,7 @@ constructor(
 )
 ```
 
-```
+```ts
 interface RemoteMonitoringServiceConfig {
   transportOptions?: Partial<TransportBaseOptions>;
   loggerOptions?: Partial<LoggerOptions>;
@@ -514,7 +441,7 @@ All methods of this logger will be overridden with corresponding methods of serv
 overrideLogger(unknownLogger: UnknownLogger)
 ```
 
-```
+```ts
 interface UnknownLogger {
   log?(...parts: unknown[]): void;
   debug?(...parts: unknown[]): void;
@@ -536,8 +463,8 @@ overrideNativeConsole()
 
 Subscribes to `unhandledRejection` and `uncaughtException` events of the process to report `error` in such cases.
 
-```
-catchProcessErrors()
+```ts
+catchProcessErrors();
 ```
 
 ### ServerMonitoringService
@@ -555,7 +482,7 @@ initServerMonitoring = (
 ): ServerMonitoringService
 ```
 
-```
+```ts
 interface MonitoringOptions {
   shouldOverrideNativeConsole?: boolean;
   shouldCatchProcessErrors?: boolean;
