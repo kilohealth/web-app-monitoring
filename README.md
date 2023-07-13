@@ -63,19 +63,19 @@ In order to upload source maps into the monitoring service we need to include th
 This can be done by slightly altering the build phase bundler configuration of our app:
 
 <details>
-<summary>Next.js (Webpack)</summary>
+<summary>Next.js (next.config.js)</summary>
 
 ```js
 module.exports = {
-  webpack(config, context) {
+  webpack: (config, context) => {
     const isClient = !context.isServer;
     const isProd = !context.dev;
-    const isSourcemapsUploadBuild = Boolean(
+    const isSourcemapsUploadEnabled = Boolean(
       process.env.MONITORING_TOOL__API_KEY,
     );
 
     // Generate source maps only for the client side production build
-    if (isClient && isProd && isSourcemapsUploadBuild) {
+    if (isClient && isProd && isSourcemapsUploadEnabled) {
       return {
         ...config,
         // No reference. No source maps exposure to the client (browser).
@@ -94,19 +94,23 @@ Refer to the [documentation](https://webpack.js.org/configuration/devtool/) for 
 </details>
 
 <details>
-<summary>Gatsby.js (Webpack)</summary>
+<summary>Gatsby.js (gatsby-node.js)</summary>
 
 ```js
-module.exports.onCreateWebpackConfig = ({ stage, actions }) => {
-  const isSourcemapsUploadBuild = Boolean(process.env.MONITORING_TOOL__API_KEY);
-  // build-javascript is prod build phase
-  if (stage === 'build-javascript' && isSourcemapsUploadBuild) {
-    actions.setWebpackConfig({
-      // No reference. No source maps exposure to the client (browser).
-      // Hidden source maps generation only for error reporting purposes.
-      devtool: 'hidden-source-map',
-    });
-  }
+module.exports = {
+  onCreateWebpackConfig: ({ stage, actions }) => {
+    const isSourcemapsUploadEnabled = Boolean(
+      process.env.MONITORING_TOOL__API_KEY,
+    );
+    // build-javascript is prod build phase
+    if (stage === 'build-javascript' && isSourcemapsUploadEnabled) {
+      actions.setWebpackConfig({
+        // No reference. No source maps exposure to the client (browser).
+        // Hidden source maps generation only for error reporting purposes.
+        devtool: 'hidden-source-map',
+      });
+    }
+  },
 };
 ```
 
@@ -115,7 +119,7 @@ Refer to the [documentation](https://webpack.js.org/configuration/devtool/) for 
 </details>
 
 <details>
-<summary>Vite.js</summary>
+<summary>Vite.js (vite.config.js)</summary>
 
 ```js
 export default defineConfig({
