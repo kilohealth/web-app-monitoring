@@ -151,7 +151,7 @@ And then your CI should run `upload:sourcemaps` script for the build that includ
 
 ### Browser Monitoring Usage
 
-> **Important note:** There is no single entry point for package. You can't do smth like `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring';`
+> **Important note:** There is no single entry point for package. You can't do something like `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring';`
 > Reason for that is to avoid bundling server-code into client bundle and vice versa. This structure will ensure effective tree shaking during build time.
 
 > In case your bundler supports package.json `exports` field - you can also omit `dist` in path folder `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/browser';`
@@ -358,7 +358,8 @@ module.exports = phase => {
 
 ### MonitoringService (both BrowserMonitoringService and ServerMonitoringService have these methods)
 
-#### debug, info, warn
+<details>
+<summary>debug, info, warn</summary>
 
 ```
 debug(message: string, context?: object)
@@ -368,16 +369,21 @@ warn(message: string, context?: object)
 
 - `message` - any message to be logged
 - `context` - object with all needed and related to the log entrance data
+</details>
 
-#### error
+<details>
+<summary>error</summary>
 
 ```
 error(message: string, context?: object, error?: Error)
 ```
 
-Same as above, but you can also optionally pass error instance as thrid parameter
+Same as above, but you can also optionally pass error instance as third parameter
 
-#### reportError
+</details>
+
+<details>
+<summary>reportError</summary>
 
 ```
 reportError(error: Error, context?: object)
@@ -385,9 +391,12 @@ reportError(error: Error, context?: object)
 
 Shortcut for `service.error()`, which uses `error.message` field as message param for `error` method.
 
+</details>
+
 ### BrowserMonitoringService
 
-#### constructor
+<details>
+<summary>constructor</summary>
 
 ```
 constructor(
@@ -410,10 +419,12 @@ interface RemoteMonitoringServiceParams {
 - `serviceVersion` - version of the service
 - `serviceEnv` - environment where service is deployed
 - `authToken` - client token
+</details>
 
 ### ServerMonitoringService
 
-#### constructor
+<details>
+<summary>constructor</summary>
 
 ```
 constructor(
@@ -431,8 +442,10 @@ interface RemoteMonitoringServiceConfig {
 
 - `transportOptions` - [pino-datadog-transport options](https://github.com/theogravity/pino-datadog-transport#configuration-options)
 - `loggerOptions` - [pino logger options](https://getpino.io/#/docs/api?id=options-object)
+</details>
 
-#### overrideLogger
+<details>
+<summary>overrideLogger</summary>
 
 Overrides logger passed as argument with monitoring logger.
 All methods of this logger will be overridden with corresponding methods of server monitoring.
@@ -451,7 +464,10 @@ interface UnknownLogger {
 }
 ```
 
-#### overrideNativeConsole
+</details>
+
+<details>
+<summary>overrideNativeConsole</summary>
 
 Calls overrideLogger for native console.
 
@@ -459,7 +475,10 @@ Calls overrideLogger for native console.
 overrideNativeConsole()
 ```
 
-#### catchProcessErrors
+</details>
+
+<details>
+<summary>catchProcessErrors</summary>
 
 Subscribes to `unhandledRejection` and `uncaughtException` events of the process to report `error` in such cases.
 
@@ -467,9 +486,12 @@ Subscribes to `unhandledRejection` and `uncaughtException` events of the process
 catchProcessErrors();
 ```
 
+</details>
+
 ### ServerMonitoringService
 
-#### initServerMonitoring
+<details>
+<summary>initServerMonitoring</summary>
 
 Instantiate ServerMonitoringService with provided params and may also do additional work,
 depending on provided variables.
@@ -494,3 +516,5 @@ interface MonitoringOptions {
 - `shouldOverrideNativeConsole` - if `true`, will call `serverMonitoringService.overrideNativeConsole()` under the hood
 - `shouldCatchProcessErrors` - if `true`, will call `serverMonitoringService.catchProcessErrors()` under the hood
 - `globalMonitoringInstanceName` - if provided with non-empty string will put instantiated `serverMonitoringService` into global scope under provided name.
+
+</details>
