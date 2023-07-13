@@ -70,12 +70,12 @@ module.exports = {
   webpack(config, context) {
     const isClient = !context.isServer;
     const isProd = !context.dev;
-    const isUploadSourcemapsEnabled = Boolean(
+    const isSourcemapsUploadBuild = Boolean(
       process.env.MONITORING_TOOL__API_KEY,
     );
 
     // Generate source maps only for the client side production build
-    if (isClient && isProd && isUploadSourcemapsEnabled) {
+    if (isClient && isProd && isSourcemapsUploadBuild) {
       return {
         ...config,
         // No reference. No source maps exposure to the client (browser).
@@ -98,8 +98,9 @@ Refer to the [documentation](https://webpack.js.org/configuration/devtool/) for 
 
 ```js
 module.exports.onCreateWebpackConfig = ({ stage, actions }) => {
+  const isSourcemapsUploadBuild = Boolean(process.env.MONITORING_TOOL__API_KEY);
   // build-javascript is prod build phase
-  if (stage === 'build-javascript') {
+  if (stage === 'build-javascript' && isSourcemapsUploadBuild) {
     actions.setWebpackConfig({
       // No reference. No source maps exposure to the client (browser).
       // Hidden source maps generation only for error reporting purposes.
@@ -121,7 +122,7 @@ export default defineConfig({
   build: {
     // No reference. No source maps exposure to the client (browser).
     // Hidden source maps generation only for error reporting purposes.
-    sourcemap: 'hidden',
+    sourcemap: process.env.MONITORING_TOOL__API_KEY ? 'hidden' : false,
   },
 });
 ```
