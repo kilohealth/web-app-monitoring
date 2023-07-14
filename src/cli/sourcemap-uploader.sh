@@ -1,17 +1,28 @@
 #!/bin/bash
 
-if [[ -z "${MONITORING_TOOL__API_KEY}" ]] || [[ -z "${MONITORING_TOOL__BUILD_DIR}" ]] || [[ -z "${MONITORING_TOOL__SERVICE_NAME}" ]] || [[ -z "${MONITORING_TOOL__SERVICE_VERSION}" ]] || [[ -z "${MONITORING_TOOL__PUBLIC_PATH}" ]]; then
-  echo "Some of required variables for sourcemaps upload are not set. Please check MONITORING_TOOL__API_KEY, MONITORING_TOOL__BUILD_DIR, MONITORING_TOOL__SERVICE_NAME, MONITORING_TOOL__SERVICE_VERSION, MONITORING_TOOL__PUBLIC_PATH"
-  # TODO: show only absent variable
+# Read the argument values
+while [[ "$#" -gt 0 ]]
+  do
+    case $1 in
+      -p|--publicPath) PUBLIC_PATH="$2"; shift;;
+      -d|--buildDir) BUILD_DIR="$2"; shift;;
+    esac
+    shift
+done
+
+# check that all needed env vars and arg values present
+# TODO: show only absent variable
+if [[ -z "${MONITORING_TOOL__API_KEY}" ]] || [[ -z "${MONITORING_TOOL__SERVICE_NAME}" ]] || [[ -z "${MONITORING_TOOL__SERVICE_VERSION}" ]] || [[ -z "${BUILD_DIR}" ]] || [[ -z "${PUBLIC_PATH}" ]]; then
+  echo "Some of required variables or params for sourcemaps upload are not set. Please check MONITORING_TOOL__API_KEY, MONITORING_TOOL__SERVICE_NAME, MONITORING_TOOL__SERVICE_VERSION env vars and --publicPath --buildDir args"
   echo "MONITORING_TOOL__API_KEY - $MONITORING_TOOL__API_KEY"
   echo "MONITORING_TOOL__SERVICE_NAME - $MONITORING_TOOL__SERVICE_NAME"
   echo "MONITORING_TOOL__SERVICE_VERSION - $MONITORING_TOOL__SERVICE_VERSION"
-  echo "MONITORING_TOOL__BUILD_DIR - $MONITORING_TOOL__BUILD_DIR"
-  echo "MONITORING_TOOL__PUBLIC_PATH - $MONITORING_TOOL__PUBLIC_PATH"
+  echo "--buildDir - $BUILD_DIR"
+  echo "--publicPath - $PUBLIC_PATH"
   exit 1
 else
-  DATADOG_API_KEY=$MONITORING_TOOL__API_KEY npx @datadog/datadog-ci@^2.11.0 sourcemaps upload "$MONITORING_TOOL__BUILD_DIR" \
-            --service="$MONITORING_TOOL__SERVICE_NAME" \
-            --release-version="$MONITORING_TOOL__SERVICE_VERSION" \
-            --minified-path-prefix="$MONITORING_TOOL__PUBLIC_PATH"
+  DATADOG_API_KEY=$MONITORING_TOOL__API_KEY npx @datadog/datadog-ci@^2.11.0 sourcemaps upload "$BUILD_DIR" \
+    --minified-path-prefix="$PUBLIC_PATH" \
+    --service="$MONITORING_TOOL__SERVICE_NAME" \
+    --release-version="$MONITORING_TOOL__SERVICE_VERSION"
 fi
