@@ -1,3 +1,15 @@
+# [2.0.0-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v1.3.0-alpha.2...v2.0.0-alpha.1) (2023-07-14)
+
+
+### Features
+
+* **cli:** change BUILD_DIR and PUBLIC_PATH env variables to --buildDir and --publicPath cmd args ([#22](https://github.com/kilohealth/web-app-monitoring/issues/22)) ([76c24b2](https://github.com/kilohealth/web-app-monitoring/commit/76c24b284440300b3977713b0b6450e5bc7d44eb))
+
+
+### BREAKING CHANGES
+
+* **cli:** BUILD_DIR env var is --buildDir arg and PUBLIC_PATH is --publicPath now
+
 # [1.3.0-alpha.2](https://github.com/kilohealth/web-app-monitoring/compare/v1.3.0-alpha.1...v1.3.0-alpha.2) (2023-07-14)
 
 
