@@ -31,15 +31,13 @@ npm install @kilohealth/web-app-monitoring
 
 ### Setup environment variables
 
-| Variable                           | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              | Upload source maps | Server (APM, tracing) | Browser / Client |
-| ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------: | :-------------------: | :--------------: |
-| `MONITORING_TOOL__API_KEY`         | This key is needed in order to uploaded source maps for browser monitoring, send server side (APM) logs and tracing info. You can find API key [here](https://app.datadoghq.com/organization-settings/api-keys?id=97403b1a-0806-45e1-9ecb-fa059af82048).                                                                                                                                                                                                                                                                                                                                                                                 |         ✔️         |          ✔️           |                  |
-| `MONITORING_TOOL__SERVICE_NAME`    | The service name, for example: `timely-hand-web-funnel-app`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |         ✔️         |          ✔️           |        ✔️        |
-| `MONITORING_TOOL__SERVICE_VERSION` | The service version, for example: `$CI_COMMIT_SHA`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |         ✔️         |          ✔️           |        ✔️        |
-| `MONITORING_TOOL__SERVICE_ENV`     | The service environment, for example: `$CI_ENVIRONMENT_NAME`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |         ✔️         |          ✔️           |        ✔️        |
-| `MONITORING_TOOL__CLIENT_TOKEN`    | This token is needed in order to send browser monitoring logs. You can create or find client token [here](https://app.datadoghq.com/organization-settings/client-tokens).                                                                                                                                                                                                                                                                                                                                                                                                                                                                |         ️          |                       |        ✔️        |
-| `MONITORING_TOOL__PUBLIC_PATH`     | This is RELATIVE path, part of URL between domain (which can be different for different environments) and path to file itself. In other words - base path for all the assets within your application.<br/>You can think of this as kind of relative [Public Path](https://webpack.js.org/guides/public-path/). For example it can be `/` or `/static`.<br/>In other words this is common relative prefix for all your static files or / if there is none.<br/> - for Vite.js the default is `/`<br/> - for Next.js the default is `/_next/static/chunks` (!!! `_` instead of `.` in file system)<br/> - for Gatsby.js the default is `/` |         ✔️         |                       |                  |
-| `MONITORING_TOOL__BUILD_DIR`       | This should be RELATIVE path to your build directory. For example `./dist` or `./build`.</br>- for Vite.js default is `./dist`</br>- for Next.js default is `./.next/static/chunks`</br>- for Gatsby.js default is `./public`                                                                                                                                                                                                                                                                                                                                                                                                            |         ✔️         |                       |                  |
+| Variable                           | Description                                                                                                                                                                                                                                              | Upload source maps | Server (APM, tracing) | Browser / Client |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :----------------: | :-------------------: | :--------------: |
+| `MONITORING_TOOL__API_KEY`         | This key is needed in order to uploaded source maps for browser monitoring, send server side (APM) logs and tracing info. You can find API key [here](https://app.datadoghq.com/organization-settings/api-keys?id=97403b1a-0806-45e1-9ecb-fa059af82048). |         ✔️         |          ✔️           |                  |
+| `MONITORING_TOOL__SERVICE_NAME`    | The service name, for example: `timely-hand-web-funnel-app`.                                                                                                                                                                                             |         ✔️         |          ✔️           |        ✔️        |
+| `MONITORING_TOOL__SERVICE_VERSION` | The service version, for example: `$CI_COMMIT_SHA`.                                                                                                                                                                                                      |         ✔️         |          ✔️           |        ✔️        |
+| `MONITORING_TOOL__SERVICE_ENV`     | The service environment, for example: `$CI_ENVIRONMENT_NAME`.                                                                                                                                                                                            |         ✔️         |          ✔️           |        ✔️        |
+| `MONITORING_TOOL__CLIENT_TOKEN`    | This token is needed in order to send browser monitoring logs. You can create or find client token [here](https://app.datadoghq.com/organization-settings/client-tokens).                                                                                |         ️          |                       |        ✔️        |
 
 > **Note:** Depending on the framework you are using, in order to expose environment variables to the client you may need to prefix the environment variables as mentioned below:
 >
@@ -63,19 +61,19 @@ In order to upload source maps into the monitoring service we need to include th
 This can be done by slightly altering the build phase bundler configuration of our app:
 
 <details>
-<summary>Next.js (Webpack)</summary>
+<summary>Next.js (next.config.js)</summary>
 
 ```js
 module.exports = {
-  webpack(config, context) {
+  webpack: (config, context) => {
     const isClient = !context.isServer;
     const isProd = !context.dev;
-    const isUploadSourcemapsEnabled = Boolean(
+    const isSourcemapsUploadEnabled = Boolean(
       process.env.MONITORING_TOOL__API_KEY,
     );
 
     // Generate source maps only for the client side production build
-    if (isClient && isProd && isUploadSourcemapsEnabled) {
+    if (isClient && isProd && isSourcemapsUploadEnabled) {
       return {
         ...config,
         // No reference. No source maps exposure to the client (browser).
@@ -94,18 +92,23 @@ Refer to the [documentation](https://webpack.js.org/configuration/devtool/) for 
 </details>
 
 <details>
-<summary>Gatsby.js (Webpack)</summary>
+<summary>Gatsby.js (gatsby-node.js)</summary>
 
 ```js
-module.exports.onCreateWebpackConfig = ({ stage, actions }) => {
-  // build-javascript is prod build phase
-  if (stage === 'build-javascript') {
-    actions.setWebpackConfig({
-      // No reference. No source maps exposure to the client (browser).
-      // Hidden source maps generation only for error reporting purposes.
-      devtool: 'hidden-source-map',
-    });
-  }
+module.exports = {
+  onCreateWebpackConfig: ({ stage, actions }) => {
+    const isSourcemapsUploadEnabled = Boolean(
+      process.env.MONITORING_TOOL__API_KEY,
+    );
+    // build-javascript is prod build phase
+    if (stage === 'build-javascript' && isSourcemapsUploadEnabled) {
+      actions.setWebpackConfig({
+        // No reference. No source maps exposure to the client (browser).
+        // Hidden source maps generation only for error reporting purposes.
+        devtool: 'hidden-source-map',
+      });
+    }
+  },
 };
 ```
 
@@ -114,14 +117,14 @@ Refer to the [documentation](https://webpack.js.org/configuration/devtool/) for 
 </details>
 
 <details>
-<summary>Vite.js</summary>
+<summary>Vite.js (vite.config.js)</summary>
 
 ```js
 export default defineConfig({
   build: {
     // No reference. No source maps exposure to the client (browser).
     // Hidden source maps generation only for error reporting purposes.
-    sourcemap: 'hidden',
+    sourcemap: process.env.MONITORING_TOOL__API_KEY ? 'hidden' : false,
   },
 });
 ```
@@ -137,12 +140,18 @@ Refer to the [documentation](https://vitejs.dev/config/build-options.html#build-
 #### Upload generated source maps
 
 In order to upload generated source maps into the monitoring service, you should use `web-app-monitoring__upload-sourcemaps` bin, provided by `@kilohealth/web-app-monitoring` package.
+To run the script you need to provide arguments:
+
+| Argument               | Description                                                                                                                                                                                                                                                                                                                                                                                                                                             |   Vite   |                              Next                               |   Gatsby   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------: | :-------------------------------------------------------------: | :--------: |
+| `--buildDir` or `-d`   | This should be RELATIVE path to your build directory. For example `./dist` or `./build`.                                                                                                                                                                                                                                                                                                                                                                | `./dist` |                     `./.next/static/chunks`                     | `./public` |
+| `--publicPath` or `-p` | This is RELATIVE path, part of URL between domain (which can be different for different environments) and path to file itself. In other words - base path for all the assets within your application.<br/>You can think of this as kind of relative [Public Path](https://webpack.js.org/guides/public-path/). For example it can be `/` or `/static`. In other words this is common relative prefix for all your static files or `/` if there is none. |   `/`    | `/_next/static/chunks` (!!! `_` instead of `.` in file system)️ |    `/`     |
 
 Script example for Next.js:
 
 ```
 "scripts": {
-  "upload:sourcemaps": "MONITORING_TOOL__BUILD_DIR=./.next/static/chunks MONITORING_TOOL__PUBLIC_PATH=/_next/static/chunks web-app-monitoring__upload-sourcemaps",
+  "upload:sourcemaps": "web-app-monitoring__upload-sourcemaps --buildDir=./.next/static/chunks --publicPath=/_next/static/chunks",
   ...
 },
 ```
@@ -151,7 +160,7 @@ And then your CI should run `upload:sourcemaps` script for the build that includ
 
 ### Browser Monitoring Usage
 
-> **Important note:** There is no single entry point for package. You can't do smth like `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring';`
+> **Important note:** There is no single entry point for package. You can't do something like `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring';`
 > Reason for that is to avoid bundling server-code into client bundle and vice versa. This structure will ensure effective tree shaking during build time.
 
 > In case your bundler supports package.json `exports` field - you can also omit `dist` in path folder `import { BrowserMonitoringService } from '@kilohealth/web-app-monitoring/browser';`
@@ -358,7 +367,8 @@ module.exports = phase => {
 
 ### MonitoringService (both BrowserMonitoringService and ServerMonitoringService have these methods)
 
-#### debug, info, warn
+<details>
+<summary>debug, info, warn</summary>
 
 ```
 debug(message: string, context?: object)
@@ -368,16 +378,21 @@ warn(message: string, context?: object)
 
 - `message` - any message to be logged
 - `context` - object with all needed and related to the log entrance data
+</details>
 
-#### error
+<details>
+<summary>error</summary>
 
 ```
 error(message: string, context?: object, error?: Error)
 ```
 
-Same as above, but you can also optionally pass error instance as thrid parameter
+Same as above, but you can also optionally pass error instance as third parameter
 
-#### reportError
+</details>
+
+<details>
+<summary>reportError</summary>
 
 ```
 reportError(error: Error, context?: object)
@@ -385,9 +400,12 @@ reportError(error: Error, context?: object)
 
 Shortcut for `service.error()`, which uses `error.message` field as message param for `error` method.
 
+</details>
+
 ### BrowserMonitoringService
 
-#### constructor
+<details>
+<summary>constructor</summary>
 
 ```
 constructor(
@@ -410,10 +428,12 @@ interface RemoteMonitoringServiceParams {
 - `serviceVersion` - version of the service
 - `serviceEnv` - environment where service is deployed
 - `authToken` - client token
+</details>
 
 ### ServerMonitoringService
 
-#### constructor
+<details>
+<summary>constructor</summary>
 
 ```
 constructor(
@@ -431,8 +451,10 @@ interface RemoteMonitoringServiceConfig {
 
 - `transportOptions` - [pino-datadog-transport options](https://github.com/theogravity/pino-datadog-transport#configuration-options)
 - `loggerOptions` - [pino logger options](https://getpino.io/#/docs/api?id=options-object)
+</details>
 
-#### overrideLogger
+<details>
+<summary>overrideLogger</summary>
 
 Overrides logger passed as argument with monitoring logger.
 All methods of this logger will be overridden with corresponding methods of server monitoring.
@@ -451,7 +473,10 @@ interface UnknownLogger {
 }
 ```
 
-#### overrideNativeConsole
+</details>
+
+<details>
+<summary>overrideNativeConsole</summary>
 
 Calls overrideLogger for native console.
 
@@ -459,7 +484,10 @@ Calls overrideLogger for native console.
 overrideNativeConsole()
 ```
 
-#### catchProcessErrors
+</details>
+
+<details>
+<summary>catchProcessErrors</summary>
 
 Subscribes to `unhandledRejection` and `uncaughtException` events of the process to report `error` in such cases.
 
@@ -467,9 +495,12 @@ Subscribes to `unhandledRejection` and `uncaughtException` events of the process
 catchProcessErrors();
 ```
 
+</details>
+
 ### ServerMonitoringService
 
-#### initServerMonitoring
+<details>
+<summary>initServerMonitoring</summary>
 
 Instantiate ServerMonitoringService with provided params and may also do additional work,
 depending on provided variables.
@@ -494,3 +525,5 @@ interface MonitoringOptions {
 - `shouldOverrideNativeConsole` - if `true`, will call `serverMonitoringService.overrideNativeConsole()` under the hood
 - `shouldCatchProcessErrors` - if `true`, will call `serverMonitoringService.catchProcessErrors()` under the hood
 - `globalMonitoringInstanceName` - if provided with non-empty string will put instantiated `serverMonitoringService` into global scope under provided name.
+
+</details>

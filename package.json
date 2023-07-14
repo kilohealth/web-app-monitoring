@@ -1,6 +1,6 @@
 {
   "name": "@kilohealth/web-app-monitoring",
-  "version": "1.2.2",
+  "version": "2.0.0-alpha.1",
   "license": "MIT",
   "author": "Kilo Health",
   "sideEffects": false,
