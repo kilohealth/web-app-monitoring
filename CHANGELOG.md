@@ -1,3 +1,10 @@
+# [1.3.0-alpha.2](https://github.com/kilohealth/web-app-monitoring/compare/v1.3.0-alpha.1...v1.3.0-alpha.2) (2023-07-14)
+
+
+### Reverts
+
+* Revert "feat(cli): change BUILD_DIR and PUBLIC_PATH env variables to --buildDir and --publicPath cmd args" ([bca0de0](https://github.com/kilohealth/web-app-monitoring/commit/bca0de06706eafae9946c6ee2dba2f7bc882e0dc))
+
 # [1.3.0-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.2...v1.3.0-alpha.1) (2023-07-14)
 
 
