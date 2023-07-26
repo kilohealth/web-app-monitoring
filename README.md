@@ -151,7 +151,7 @@ Script example for Next.js:
 
 ```
 "scripts": {
-  "upload:sourcemaps": "web-app-monitoring__upload-sourcemaps --buildDir=./.next/static/chunks --publicPath=/_next/static/chunks",
+  "upload:sourcemaps": "web-app-monitoring__upload-sourcemaps --buildDir ./.next/static/chunks --publicPath /_next/static/chunks",
   ...
 },
 ```
