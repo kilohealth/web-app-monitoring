@@ -7,3 +7,5 @@ export interface Logger {
 
   error(message: string, context?: object, error?: Error): void;
 }
+
+export type LogLevel = keyof Logger;

@@ -1,10 +1,10 @@
 import { datadogLogs } from '@datadog/browser-logs';
 import { LogsInitConfiguration } from '@datadog/browser-logs/src/domain/configuration';
 
-import {
-  MonitoringService,
-  RemoteMonitoringServiceParams,
-} from '../shared/MonitoringService';
+import { MonitoringService } from '../shared/MonitoringService';
+import { RemoteMonitoringServiceParams } from '../shared/RemoteMonitoringServiceParams';
+
+import { DatadogLoggerWrapper } from './DatadogLoggerWrapper';
 
 type RemoteMonitoringServiceConfig = Partial<LogsInitConfiguration>;
 
@@ -16,13 +16,13 @@ export class BrowserMonitoringService extends MonitoringService {
     super(remoteMonitoringServiceParams, remoteMonitoringServiceConfig);
   }
 
-  initRemoteLogger(
+  initRemoteMonitoring(
     remoteMonitoringServiceParams: RemoteMonitoringServiceParams,
     remoteMonitoringServiceConfig?: RemoteMonitoringServiceConfig,
   ) {
     const { serviceName, serviceVersion, serviceEnv, authToken } =
       remoteMonitoringServiceParams ?? {};
-    const ddLogger = datadogLogs.logger;
+    const logger = new DatadogLoggerWrapper(datadogLogs.logger);
     datadogLogs.init({
       clientToken: authToken ?? '',
       service: serviceName,
@@ -32,6 +32,9 @@ export class BrowserMonitoringService extends MonitoringService {
       ...remoteMonitoringServiceConfig,
     });
 
-    return ddLogger;
+    return {
+      logger,
+      userContext: datadogLogs,
+    };
   }
 }

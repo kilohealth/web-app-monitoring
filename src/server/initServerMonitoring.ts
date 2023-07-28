@@ -1,4 +1,4 @@
-import { RemoteMonitoringServiceParams } from '../shared/MonitoringService';
+import { RemoteMonitoringServiceParams } from '../shared/RemoteMonitoringServiceParams';
 
 import {
   RemoteMonitoringServiceConfig,
