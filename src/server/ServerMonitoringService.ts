@@ -2,11 +2,10 @@ import 'pino-datadog-transport';
 import deepMerge from 'deepmerge';
 import pino, { LoggerOptions, TransportBaseOptions } from 'pino';
 
-import {
-  MonitoringService,
-  RemoteMonitoringServiceParams,
-} from '../shared/MonitoringService';
+import { MonitoringService } from '../shared/MonitoringService';
 import { ConsoleLogger } from '../shared/ConsoleLogger';
+import { RemoteMonitoringServiceParams } from '../shared/RemoteMonitoringServiceParams';
+import { LocalUserContext } from '../browser/LocalUserContext';
 
 import { getLoggingFunction } from './getLoggingFunction';
 import { PinoWrapper } from './PinoWrapper';
@@ -36,7 +35,7 @@ export class ServerMonitoringService extends MonitoringService {
     super(remoteMonitoringServiceParams, remoteMonitoringServiceConfig);
   }
 
-  initRemoteLogger(
+  initRemoteMonitoring(
     remoteMonitoringServiceParams: RemoteMonitoringServiceParams,
     remoteMonitoringServiceConfig: RemoteMonitoringServiceConfig = {},
   ) {
@@ -78,7 +77,12 @@ export class ServerMonitoringService extends MonitoringService {
     );
     const pinoLogger = pino(finalLoggerOptions, transport);
 
-    return new PinoWrapper(pinoLogger);
+    const logger = new PinoWrapper(pinoLogger);
+
+    return {
+      logger,
+      userContext: new LocalUserContext(),
+    };
   }
 
   overrideLogger(unknownLogger: UnknownLogger) {

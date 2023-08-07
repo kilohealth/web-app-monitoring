@@ -1,6 +1,7 @@
 import pino from 'pino';
 
 import { ServerMonitoringService } from '../ServerMonitoringService';
+import { userSymbol } from '../../shared/userSymbol';
 
 const pinoLogger = {
   debug: jest.fn(),
@@ -260,5 +261,197 @@ describe('ServerMonitoringService', () => {
     serverMonitoringService.info(message, context);
 
     expect(pinoLogger.info).toHaveBeenCalledWith(context, message);
+  });
+
+  describe('user context', () => {
+    const message = 'message';
+    const user = {
+      email: 'john@google.com',
+    };
+
+    describe('with local logger', () => {
+      let consoleInfoSpy: jest.SpyInstance;
+
+      beforeEach(() => {
+        consoleInfoSpy = jest.spyOn(console, 'info').mockImplementation();
+      });
+
+      afterEach(() => {
+        consoleInfoSpy.mockRestore();
+      });
+
+      it('logs user context if present', function () {
+        const serverMonitoringService = new ServerMonitoringService();
+        serverMonitoringService.userContext.setUser(user);
+        serverMonitoringService.info(message);
+
+        expect(consoleInfoSpy).toHaveBeenCalledWith(message, {
+          [userSymbol]: user,
+        });
+      });
+
+      it('logs updated user context', function () {
+        const newUser = {
+          email: 'james@google.com',
+        };
+        const serverMonitoringService = new ServerMonitoringService();
+        serverMonitoringService.userContext.setUser(user);
+        serverMonitoringService.info(message);
+
+        expect(consoleInfoSpy).toHaveBeenCalledWith(message, {
+          [userSymbol]: user,
+        });
+
+        serverMonitoringService.userContext.setUser(newUser);
+        serverMonitoringService.info(message);
+
+        expect(consoleInfoSpy).toHaveBeenCalledWith(message, {
+          [userSymbol]: newUser,
+        });
+      });
+
+      it('allow context property manipulations', function () {
+        const serverMonitoringService = new ServerMonitoringService();
+        const propName = 'name';
+        const propValue = 'John';
+        const userWithExtraProp = {
+          ...user,
+          [propName]: propValue,
+        };
+        serverMonitoringService.userContext.setUser(userWithExtraProp);
+        serverMonitoringService.userContext.removeUserProperty(propName);
+
+        serverMonitoringService.info(message);
+
+        expect(consoleInfoSpy).toHaveBeenCalledWith(message, {
+          [userSymbol]: user,
+        });
+
+        serverMonitoringService.userContext.setUserProperty(
+          propName,
+          propValue,
+        );
+        serverMonitoringService.info(message);
+
+        expect(consoleInfoSpy).toHaveBeenCalledWith(message, {
+          [userSymbol]: userWithExtraProp,
+        });
+      });
+
+      it("don't log user context if it is cleared", () => {
+        const serverMonitoringService = new ServerMonitoringService();
+
+        serverMonitoringService.userContext.setUser(user);
+
+        serverMonitoringService.info(message);
+        expect(consoleInfoSpy).toHaveBeenCalledWith(message, {
+          [userSymbol]: user,
+        });
+
+        serverMonitoringService.userContext.clearUser();
+
+        serverMonitoringService.info(message);
+        expect(consoleInfoSpy).toHaveBeenCalledWith(message);
+      });
+    });
+
+    describe('with remote logger', () => {
+      it('logs user context if present', function () {
+        const sererMonitoringService = new ServerMonitoringService(
+          remoteMonitoringServiceParams,
+        );
+        sererMonitoringService.userContext.setUser(user);
+        sererMonitoringService.info(message);
+
+        expect(pinoLogger.info).toHaveBeenCalledWith(
+          {
+            [userSymbol]: user,
+          },
+          message,
+        );
+      });
+
+      it('logs updated user context', function () {
+        const newUser = {
+          email: 'james@google.com',
+        };
+        const sererMonitoringService = new ServerMonitoringService(
+          remoteMonitoringServiceParams,
+        );
+        sererMonitoringService.userContext.setUser(user);
+        sererMonitoringService.info(message);
+
+        expect(pinoLogger.info).toHaveBeenCalledWith(
+          {
+            [userSymbol]: user,
+          },
+          message,
+        );
+
+        sererMonitoringService.userContext.setUser(newUser);
+        sererMonitoringService.info(message);
+
+        expect(pinoLogger.info).toHaveBeenCalledWith(
+          {
+            [userSymbol]: newUser,
+          },
+          message,
+        );
+      });
+
+      it('allow context property manipulations', function () {
+        const sererMonitoringService = new ServerMonitoringService(
+          remoteMonitoringServiceParams,
+        );
+        const propName = 'name';
+        const propValue = 'John';
+        const userWithExtraProp = {
+          ...user,
+          [propName]: propValue,
+        };
+        sererMonitoringService.userContext.setUser(userWithExtraProp);
+        sererMonitoringService.userContext.removeUserProperty(propName);
+
+        sererMonitoringService.info(message);
+
+        expect(pinoLogger.info).toHaveBeenCalledWith(
+          {
+            [userSymbol]: user,
+          },
+          message,
+        );
+
+        sererMonitoringService.userContext.setUserProperty(propName, propValue);
+        sererMonitoringService.info(message);
+
+        expect(pinoLogger.info).toHaveBeenCalledWith(
+          {
+            [userSymbol]: userWithExtraProp,
+          },
+          message,
+        );
+      });
+
+      it("don't log user context if it is cleared", () => {
+        const sererMonitoringService = new ServerMonitoringService(
+          remoteMonitoringServiceParams,
+        );
+
+        sererMonitoringService.userContext.setUser(user);
+
+        sererMonitoringService.info(message);
+        expect(pinoLogger.info).toHaveBeenCalledWith(
+          {
+            [userSymbol]: user,
+          },
+          message,
+        );
+
+        sererMonitoringService.userContext.clearUser();
+
+        sererMonitoringService.info(message);
+        expect(pinoLogger.info).toHaveBeenCalledWith(message);
+      });
+    });
   });
 });

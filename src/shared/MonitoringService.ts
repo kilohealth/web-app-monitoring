@@ -1,20 +1,21 @@
-import { Logger } from './Logger';
-import { ConsoleLogger } from './ConsoleLogger';
+import { UserContext } from '../browser/UserContext';
+import { LocalUserContext } from '../browser/LocalUserContext';
 
-export interface RemoteMonitoringServiceParams {
-  serviceName?: string;
-  serviceVersion?: string;
-  serviceEnv?: string;
-  authToken?: string;
-}
+import { Logger, LogLevel } from './Logger';
+import { ConsoleLogger } from './ConsoleLogger';
+import { RemoteMonitoringServiceParams } from './RemoteMonitoringServiceParams';
+import { userSymbol } from './userSymbol';
 
 export abstract class MonitoringService {
-  abstract initRemoteLogger(
+  abstract initRemoteMonitoring(
     remoteMonitoringServiceParams: RemoteMonitoringServiceParams,
     remoteMonitoringServiceConfig?: unknown,
-  ): Logger;
+  ): { logger: Logger; userContext: UserContext };
 
   logger: Logger;
+
+  userContext: UserContext;
+
   constructor(
     remoteMonitoringServiceParams?: RemoteMonitoringServiceParams,
     remoteMonitoringServiceConfig?: unknown,
@@ -23,16 +24,14 @@ export abstract class MonitoringService {
       remoteMonitoringServiceParams ?? {};
 
     if (serviceName && serviceVersion && serviceEnv && authToken) {
-      this.logger = this.initRemoteLogger(
-        {
-          authToken,
-          serviceName,
-          serviceVersion,
-          serviceEnv,
-        },
+      const { logger, userContext } = this.initRemoteMonitoring(
+        remoteMonitoringServiceParams as RemoteMonitoringServiceParams,
         remoteMonitoringServiceConfig,
       );
+      this.logger = logger;
+      this.userContext = userContext;
     } else {
+      this.userContext = new LocalUserContext();
       this.logger = new ConsoleLogger();
 
       if (remoteMonitoringServiceParams) {
@@ -40,32 +39,53 @@ export abstract class MonitoringService {
           '[MonitoringService] can not initialize remote monitoring service, because some variables are missing. Initializing with console instead',
         );
         this.logger.warn(`
-        serviceName - ${serviceName}
-        serviceVersion - ${serviceVersion}
-        serviceEnv - ${serviceEnv}
-        authToken - ${authToken}
+        serviceName - ${remoteMonitoringServiceParams.serviceName}
+        serviceVersion - ${remoteMonitoringServiceParams.serviceVersion}
+        serviceEnv - ${remoteMonitoringServiceParams.serviceEnv}
+        authToken - ${remoteMonitoringServiceParams.authToken}
       `);
       }
     }
   }
 
+  log(
+    level: LogLevel,
+    ...args: [message: string, context?: object, error?: Error]
+  ) {
+    const user = this.userContext.getUser();
+
+    if (user) {
+      const [message, context, ...otherArgs] = args;
+      this.logger[level](
+        message,
+        {
+          [userSymbol]: user,
+          ...context,
+        },
+        ...otherArgs,
+      );
+    } else {
+      this.logger[level](...args);
+    }
+  }
+
   debug(...args: [message: string, context?: object]) {
-    this.logger.debug(...args);
+    this.log('debug', ...args);
   }
 
   info(...args: [message: string, context?: object]) {
-    this.logger.info(...args);
+    this.log('info', ...args);
   }
 
   warn(...args: [message: string, context?: object]) {
-    this.logger.warn(...args);
+    this.log('warn', ...args);
   }
 
   error(...args: [message: string, context?: object, error?: Error]) {
-    this.logger.error(...args);
+    this.log('error', ...args);
   }
 
   reportError(error: Error, context?: object) {
-    this.logger.error(error.message, context, error);
+    this.error(error.message, context, error);
   }
 }
