@@ -1,3 +1,10 @@
+## [2.0.1-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v2.0.0...v2.0.1-alpha.1) (2023-08-20)
+
+
+### Bug Fixes
+
+* import LogsInitConfiguration from base entry point ([8f65ada](https://github.com/kilohealth/web-app-monitoring/commit/8f65ada49947267dc76f71c952bf59ef7711e40b))
+
 # [2.0.0](https://github.com/kilohealth/web-app-monitoring/compare/v1.2.2...v2.0.0) (2023-07-14)
 
 

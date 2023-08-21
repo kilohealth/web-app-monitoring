@@ -1,10 +1,8 @@
+import type { LogsInitConfiguration } from '@datadog/browser-logs';
 import { datadogLogs } from '@datadog/browser-logs';
-import { LogsInitConfiguration } from '@datadog/browser-logs/src/domain/configuration';
 
-import {
-  MonitoringService,
-  RemoteMonitoringServiceParams,
-} from '../shared/MonitoringService';
+import type { RemoteMonitoringServiceParams } from '../shared/MonitoringService';
+import { MonitoringService } from '../shared/MonitoringService';
 
 type RemoteMonitoringServiceConfig = Partial<LogsInitConfiguration>;
 
