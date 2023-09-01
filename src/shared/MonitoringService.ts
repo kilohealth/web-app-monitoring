@@ -1,4 +1,4 @@
-import { Logger } from './Logger';
+import type { Logger } from './Logger';
 import { ConsoleLogger } from './ConsoleLogger';
 
 export interface RemoteMonitoringServiceParams {
@@ -43,7 +43,7 @@ export abstract class MonitoringService {
         serviceName - ${serviceName}
         serviceVersion - ${serviceVersion}
         serviceEnv - ${serviceEnv}
-        authToken - ${authToken}
+        authToken - ${authToken ? '********' : undefined}
       `);
       }
     }
