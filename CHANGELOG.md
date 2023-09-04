@@ -1,3 +1,17 @@
+# [2.1.0-alpha.2](https://github.com/kilohealth/web-app-monitoring/compare/v2.1.0-alpha.1...v2.1.0-alpha.2) (2023-09-04)
+
+
+### Bug Fixes
+
+* infer tslib as a dependency when using importHelpers ([185a9ab](https://github.com/kilohealth/web-app-monitoring/commit/185a9ab55929af3e03b5321814063cd09c03ffa8))
+
+# [2.1.0-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v2.0.2...v2.1.0-alpha.1) (2023-09-04)
+
+
+### Features
+
+* update dependencies ([2aa1ad8](https://github.com/kilohealth/web-app-monitoring/commit/2aa1ad803635e50f8a7499aefb495e2f7cccff3d))
+
 ## [2.0.2](https://github.com/kilohealth/web-app-monitoring/compare/v2.0.1...v2.0.2) (2023-09-04)
 
 
