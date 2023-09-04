@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/kilohealth/web-app-monitoring/compare/v2.0.1...v2.0.2) (2023-09-04)
+
+
+### Bug Fixes
+
+* do not expose authToken ([1907768](https://github.com/kilohealth/web-app-monitoring/commit/1907768d2c15b99d62e688ca03e97eed6dfd68f6))
+
 ## [2.0.2-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v2.0.1...v2.0.2-alpha.1) (2023-09-01)
 
 
