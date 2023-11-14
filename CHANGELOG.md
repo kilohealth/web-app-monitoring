@@ -1,3 +1,11 @@
+## [2.1.1-alpha.2](https://github.com/kilohealth/web-app-monitoring/compare/v2.1.1-alpha.1...v2.1.1-alpha.2) (2023-11-14)
+
+
+### Bug Fixes
+
+* remove tslib dependency ([9492b91](https://github.com/kilohealth/web-app-monitoring/commit/9492b91d438f8101b9720a4ea40c4b070e7a0756))
+* support helper functions ([f899325](https://github.com/kilohealth/web-app-monitoring/commit/f899325cc76c2a91327df6f47860a1a169bde694))
+
 ## [2.1.1-alpha.1](https://github.com/kilohealth/web-app-monitoring/compare/v2.1.0...v2.1.1-alpha.1) (2023-10-24)
 
 
