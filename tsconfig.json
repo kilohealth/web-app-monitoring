@@ -25,7 +25,7 @@
     "declarationMap": true,
     "noEmit": false,
     "noEmitHelpers": true,
-    "importHelpers": true,
+    "importHelpers": false,
 
     "allowJs": true, // TODO: type getLoggingFunction properly
     "baseUrl": "./src",
