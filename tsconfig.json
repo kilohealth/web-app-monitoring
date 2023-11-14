@@ -24,7 +24,7 @@
     "declaration": true,
     "declarationMap": true,
     "noEmit": false,
-    "noEmitHelpers": true,
+    "noEmitHelpers": false,
     "importHelpers": false,
 
     "allowJs": true, // TODO: type getLoggingFunction properly
