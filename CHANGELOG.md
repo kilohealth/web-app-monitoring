@@ -1,3 +1,10 @@
+## [2.1.2](https://github.com/kilohealth/web-app-monitoring/compare/v2.1.1...v2.1.2) (2023-12-07)
+
+
+### Bug Fixes
+
+* update dd trace to 4.20 (nice) ([c61ca6f](https://github.com/kilohealth/web-app-monitoring/commit/c61ca6f7ddc3c91939c1cb4476f42859fe2a6b20))
+
 ## [2.1.1](https://github.com/kilohealth/web-app-monitoring/compare/v2.1.0...v2.1.1) (2023-11-14)
 
 
